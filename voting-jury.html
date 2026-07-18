@@ -248,6 +248,36 @@
     <h1 id="welcomeTitle">Добро пожаловать</h1>
     <p style="color:var(--text-dim); font-size:14px;">Распределите классические баллы Евровидения между классами.</p>
   </div>
+ <!-- КНОПКА И БЛОК КРИТЕРИЕВ ОЦЕНИВАНИЯ -->
+  <div style="text-align: center;">
+    <button class="criteria-toggle-btn" id="toggleCriteriaBtn">📋 Показать критерии оценивания</button>
+  </div>
+
+  <div class="criteria-card" id="criteriaCard">
+    <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; color:var(--neon-gold); text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid rgba(255,209,102,0.2); padding-bottom:8px;">
+      Официальный регламент судейства
+    </h3>
+    <p style="font-size:13px; color:var(--text-dim); margin-top:8px;">При распределении баллов (1-8, 10 и 12) рекомендуется опираться на следующие составляющие номера:</p>
+    
+    <div class="criteria-grid">
+      <div class="criterion-item">
+        <div class="criterion-name">1. Вокальные данные</div>
+        <div class="criterion-desc">Чистота интонирования, качество исполнения, сложность вокальных партий и уверенность на сцене.</div>
+      </div>
+      <div class="criterion-item" style="border-left-color: var(--neon-magenta);">
+        <div class="criterion-name">2. Сценическое шоу</div>
+        <div class="criterion-desc">Постановка номера, хореография, использование пространства сцены, костюмы и соответствие задумке.</div>
+      </div>
+      <div class="criterion-item" style="border-left-color: var(--neon-gold);">
+        <div class="criterion-name">3. Оригинальность песни</div>
+        <div class="criterion-desc">Аранжировка, выбор трека Евровидения, креативность интерпретации и адаптация под команду.</div>
+      </div>
+      <div class="criterion-item">
+        <div class="criterion-name">4. Харизма и Артистизм</div>
+        <div class="criterion-desc">Энергетика исполнителей, удержание внимания зала, актерская подача и общая целостность перформанса.</div>
+      </div>
+    </div>
+  </div>
 
   <!-- КАРТОЧКА ГОЛОСОВАНИЯ -->
   <div class="card">
@@ -481,7 +511,61 @@
   function escapeHtml(str) {
     if (!str) return "";
     return String(str).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split('"').join("&quot;");
+   /* Стили для блока критериев */
+  .criteria-toggle-btn {
+    background: transparent;
+    border: 1px dashed var(--neon-gold);
+    color: var(--neon-gold);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.2s;
+    display: inline-block;
   }
+  .criteria-toggle-btn:hover {
+    background: rgba(255, 209, 102, 0.1);
+    box-shadow: 0 0 10px rgba(255,209,102,0.2);
+  }
+  .criteria-card {
+    display: none; /* Переключается скриптом */
+    background: rgba(15, 10, 38, 0.6);
+    border: 1px solid rgba(255, 209, 102, 0.3);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 10px;
+  }
+  @media (max-width: 540px) { .criteria-grid { grid-template-columns: 1fr; } }
+  .criterion-item {
+    background: rgba(255,255,255,0.02);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-left: 3px solid var(--neon-cyan);
+  }
+  .criterion-name { font-weight: 800; font-size: 13px; color: #fff; margin-bottom: 2px; text-transform: uppercase;}
+  .criterion-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+  }
+ // Логика сворачивания/разворачивания критериев
+  document.getElementById("toggleCriteriaBtn").addEventListener("click", function() {
+    var card = document.getElementById("criteriaCard");
+    if (card.style.display === "block") {
+      card.style.display = "none";
+      this.textContent = "📋 Показать критерии оценивания";
+    } else {
+      card.style.display = "block";
+      this.textContent = "❌ Скрыть критерии оценивания";
+    }
+  });
 </script>
 </body>
 </html>
