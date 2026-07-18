@@ -221,6 +221,50 @@
   }
   .auth-box input:focus { border-color: var(--neon-magenta); }
   .error-text { color: var(--neon-magenta); font-size: 13px; margin-bottom: 12px; min-height: 18px; }
+
+  /* Стили для блока критериев */
+  .criteria-toggle-btn {
+    background: transparent;
+    border: 1px dashed var(--neon-gold);
+    color: var(--neon-gold);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .criteria-toggle-btn:hover {
+    background: rgba(255, 209, 102, 0.1);
+    box-shadow: 0 0 10px rgba(255,209,102,0.2);
+  }
+  .criteria-card {
+    display: none; /* Переключается скриптом */
+    background: rgba(15, 10, 38, 0.6);
+    border: 1px solid rgba(255, 209, 102, 0.3);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 24px;
+    animation: fadeIn 0.3s ease;
+  }
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 10px;
+  }
+  @media (max-width: 540px) { .criteria-grid { grid-template-columns: 1fr; } }
+  .criterion-item {
+    background: rgba(255,255,255,0.02);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-left: 3px solid var(--neon-cyan);
+  }
+  .criterion-name { font-weight: 800; font-size: 13px; color: #fff; margin-bottom: 2px; text-transform: uppercase;}
+  .criterion-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
@@ -248,7 +292,8 @@
     <h1 id="welcomeTitle">Добро пожаловать</h1>
     <p style="color:var(--text-dim); font-size:14px;">Распределите классические баллы Евровидения между классами.</p>
   </div>
- <!-- КНОПКА И БЛОК КРИТЕРИЕВ ОЦЕНИВАНИЯ -->
+  
+  <!-- КНОПКА И БЛОК КРИТЕРИЕВ ОЦЕНИВАНИЯ -->
   <div style="text-align: center;">
     <button class="criteria-toggle-btn" id="toggleCriteriaBtn">📋 Показать критерии оценивания</button>
   </div>
@@ -511,51 +556,9 @@
   function escapeHtml(str) {
     if (!str) return "";
     return String(str).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split('"').join("&quot;");
-   /* Стили для блока критериев */
-  .criteria-toggle-btn {
-    background: transparent;
-    border: 1px dashed var(--neon-gold);
-    color: var(--neon-gold);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: all 0.2s;
-    display: inline-block;
   }
-  .criteria-toggle-btn:hover {
-    background: rgba(255, 209, 102, 0.1);
-    box-shadow: 0 0 10px rgba(255,209,102,0.2);
-  }
-  .criteria-card {
-    display: none; /* Переключается скриптом */
-    background: rgba(15, 10, 38, 0.6);
-    border: 1px solid rgba(255, 209, 102, 0.3);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 24px;
-    animation: fadeIn 0.3s ease;
-  }
-  .criteria-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-top: 10px;
-  }
-  @media (max-width: 540px) { .criteria-grid { grid-template-columns: 1fr; } }
-  .criterion-item {
-    background: rgba(255,255,255,0.02);
-    padding: 10px 14px;
-    border-radius: 8px;
-    border-left: 3px solid var(--neon-cyan);
-  }
-  .criterion-name { font-weight: 800; font-size: 13px; color: #fff; margin-bottom: 2px; text-transform: uppercase;}
-  .criterion-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-  }
- // Логика сворачивания/разворачивания критериев
+
+  // Логика сворачивания/разворачивания критериев
   document.getElementById("toggleCriteriaBtn").addEventListener("click", function() {
     var card = document.getElementById("criteriaCard");
     if (card.style.display === "block") {
