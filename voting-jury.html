@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCHOOLVISION — Панель Жюри</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep: #060314;
+    --bg-deep2: #0f0a26;
+    --bg-panel: rgba(255,255,255,0.04);
+    --border-glow: rgba(255,255,255,0.08);
+    --neon-magenta: #ff2ec4;
+    --neon-cyan: #26e5ff;
+    --neon-gold: #ffd166;
+    --text-light: #f4f0ff;
+    --text-dim: #b9aed6;
+  }
+
+  html, body {
+    background: radial-gradient(ellipse at 50% -20%, #1f0d3d 0%, var(--bg-deep) 70%), var(--bg-deep);
+    color: var(--text-light);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100%;
+  }
+
+  header.nav {
+    padding: 16px 24px;
+    background: rgba(6, 3, 20, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-glow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-text {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .user-badge {
+    padding: 4px 12px;
+    background: rgba(38,229,255,0.1);
+    border: 1px solid var(--neon-cyan);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--neon-cyan);
+    font-weight: 700;
+  }
+
+  .main-container {
+    max-width: 800px;
+    margin: 40px auto 100px;
+    padding: 0 20px;
+  }
+
+  .welcome-box {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .welcome-box h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .card {
+    background: var(--bg-deep2);
+    border: 1px solid var(--border-glow);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin-bottom: 16px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neon-gold);
+  }
+
+  /* Форма Жюри */
+  .vote-form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 540px) { .vote-form-grid { grid-template-columns: 1fr; } }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  select {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-glow);
+    border-radius: 10px;
+    padding: 12px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+  }
+  select:focus { border-color: var(--neon-cyan); }
+  select option { background: var(--bg-deep2); color: #fff; }
+
+  .btn {
+    display: inline-block;
+    width: 100%;
+    background: linear-gradient(90deg, var(--neon-magenta), #a020f0);
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,46,196,0.3);
+  }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+
+  /* Сетка занятых баллов */
+  .scores-track-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+  }
+  @media (max-width: 480px) { .scores-track-grid { grid-template-columns: repeat(3, 1fr); } }
+  
+  .score-badge {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-glow);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .score-badge .num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    display: block;
+  }
+  .score-badge.used {
+    border-color: var(--neon-magenta);
+    background: rgba(255,46,196,0.08);
+    color: var(--neon-magenta);
+  }
+
+  /* Список отправленных оценок */
+  .history-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-glow);
+    font-size: 14px;
+  }
+  .history-row:last-child { border-bottom: none; }
+  .history-points {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    color: var(--neon-cyan);
+    font-size: 16px;
+  }
+
+  /* ЭКРАН АВТОРИЗАЦИИ */
+  .auth-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-deep);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .auth-box {
+    background: var(--bg-deep2);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    max-width: 360px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  .auth-box input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-glow);
+    border-radius: 10px;
+    padding: 12px;
+    color: #fff;
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 16px;
+    outline: none;
+  }
+  .auth-box input:focus { border-color: var(--neon-magenta); }
+  .error-text { color: var(--neon-magenta); font-size: 13px; margin-bottom: 12px; min-height: 18px; }
+</style>
+</head>
+<body>
+
+<!-- ЭКРАН АВТОРИЗАЦИИ ДЛЯ ЖЮРИ -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <h2 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; margin-bottom:10px;">SCHOOLVISION</h2>
+    <p style="font-size:13px; color:var(--text-dim); margin-bottom:20px;">Вход в закрытую систему голосования национального жюри</p>
+    <label>Введите ваш персональный ключ</label>
+    <input type="password" id="juryKeyInput" placeholder="••••••••">
+    <div class="error-text" id="authError"></div>
+    <button class="btn" id="authSubmitBtn">Войти в пульт</button>
+  </div>
+</div>
+
+<!-- ОСНОВНОЙ ИНТЕРФЕЙС ПАНЕЛИ -->
+<header class="nav">
+  <span class="logo-text display">SCHOOLVISION // JURY PROTOCOL</span>
+  <span class="user-badge" id="juryNamePlate">Судья</span>
+</header>
+
+<div class="main-container">
+  <div class="welcome-box">
+    <h1 id="welcomeTitle">Добро пожаловать</h1>
+    <p style="color:var(--text-dim); font-size:14px;">Распределите классические баллы Евровидения между классами.</p>
+  </div>
+
+  <!-- КАРТОЧКА ГОЛОСОВАНИЯ -->
+  <div class="card">
+    <h3>Выставить баллы участнику</h3>
+    <div class="vote-form-grid">
+      <div>
+        <label>Выберите класс / страну</label>
+        <select id="voteParticipantSelect">
+          <option value="">Загрузка участников...</option>
+        </select>
+      </div>
+      <div>
+        <label>Балл</label>
+        <select id="voteScoreSelect">
+          <option value="">Балл</option>
+          <option value="1">1 балл</option>
+          <option value="2">2 балла</option>
+          <option value="3">3 балла</option>
+          <option value="4">4 балла</option>
+          <option value="5">5 баллов</option>
+          <option value="6">6 баллов</option>
+          <option value="7">7 баллов</option>
+          <option value="8">8 баллов</option>
+          <option value="10">10 баллов</option>
+          <option value="12">12 баллов</option>
+        </select>
+      </div>
+    </div>
+    <div class="error-text" id="formError" style="margin-bottom:14px;"></div>
+    <button class="btn" id="submitJuryVoteBtn">Утвердить оценку и отправить</button>
+  </div>
+
+  <!-- ТРЕКЕР ОСТАВШИХСЯ БАЛЛОВ -->
+  <div class="card">
+    <h3>Доступность сета оценок</h3>
+    <p style="font-size:12px; color:var(--text-dim); margin-bottom:12px;">Каждый балл из классической шкалы вы можете поставить только ОДИН раз.</p>
+    <div class="scores-track-grid" id="scoresTracker">
+      <div class="score-badge" data-score="1"><span class="num">1</span></div>
+      <div class="score-badge" data-score="2"><span class="num">2</span></div>
+      <div class="score-badge" data-score="3"><span class="num">3</span></div>
+      <div class="score-badge" data-score="4"><span class="num">4</span></div>
+      <div class="score-badge" data-score="5"><span class="num">5</span></div>
+      <div class="score-badge" data-score="6"><span class="num">6</span></div>
+      <div class="score-badge" data-score="7"><span class="num">7</span></div>
+      <div class="score-badge" data-score="8"><span class="num">8</span></div>
+      <div class="score-badge" data-score="10"><span class="num">10</span></div>
+      <div class="score-badge" data-score="12"><span class="num">12</span></div>
+    </div>
+  </div>
+
+  <!-- ИСТОРИЯ ВЫСТАВЛЕННЫХ ОЦЕНОК ТЕКУЩЕГО СУДЬИ -->
+  <div class="card">
+    <h3>Ваш заполненный протокол</h3>
+    <div id="juryHistoryList">
+      <p style="color:var(--text-dim); font-size:13px; text-align:center; padding:10px 0;">Вы еще не выставили ни одного балла.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  // Конфиг твоей бд
+  var firebaseConfig = {
+    apiKey: "AIzaSyAmoYfyEXAC-mZo8BpWRFmqH914X9KYCw0",
+    authDomain: "schoolvision-2027.firebaseapp.com",
+    projectId: "schoolvision-2027",
+    storageBucket: "schoolvision-2027.firebasestorage.app",
+    messagingSenderId: "435486727960",
+    appId: "1:435486727960:web:88aaf74cb09068b867486d"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  // Массив авторизованных аккаунтов жюри и тебя как главного админа
+  var JURY_ACCOUNTS = {
+    "jury1": "Профессиональное жюри №1",
+    "jury2": "Профессиональное жюри №2",
+    "jury3": "Профессиональное жюри №3",
+    "jury4": "Профессиональное жюри №4",
+    "vision2026": "Главный Администратор"
+  };
+
+  var currentJuryId = null;
+  var currentJuryName = "";
+  var approvedParticipants = [];
+  var juryVotesData = [];
+
+  var applicationsDocRef = db.collection("schoolvision").doc("applications:list");
+  var juryVotesDocRef = db.collection("schoolvision").doc("voting:jury_votes");
+
+  // Авторизация
+  document.getElementById("authSubmitBtn").addEventListener("click", function() {
+    var key = document.getElementById("juryKeyInput").value.trim();
+    if (JURY_ACCOUNTS[key]) {
+      currentJuryId = key;
+      currentJuryName = JURY_ACCOUNTS[key];
+      document.getElementById("authOverlay").style.display = "none";
+      document.getElementById("juryNamePlate").textContent = currentJuryName;
+      document.getElementById("welcomeTitle").textContent = "Протокол: " + currentJuryName;
+      
+      initRealtimeListeners();
+    } else {
+      document.getElementById("authError").textContent = "Ключ доступа не найден в протоколе защиты.";
+    }
+  });
+
+  function initRealtimeListeners() {
+    // Слушаем только одобренных участников с главного сайта
+    applicationsDocRef.onSnapshot(function(snap) {
+      var items = snap.exists ? (snap.data().items || []) : [];
+      approvedParticipants = items.filter(function(a) { return a.status === "approved"; });
+      renderParticipantSelect();
+    });
+
+    // Слушаем все голоса жюри
+    juryVotesDocRef.onSnapshot(function(snap) {
+      if (snap.exists) {
+        juryVotesData = snap.data().items || [];
+      } else {
+        juryVotesDocRef.set({ items: [] });
+        juryVotesData = [];
+      }
+      processJuryVotes();
+    });
+  }
+
+  function renderParticipantSelect() {
+    var select = document.getElementById("voteParticipantSelect");
+    var html = '<option value="">-- Выберите конкурсанта --</option>';
+    for (var i = 0; i < approvedParticipants.length; i++) {
+      var p = approvedParticipants[i];
+      html += '<option value="' + p.id + '">' + p.className + ' (' + p.country + ')</option>';
+    }
+    select.innerHTML = html;
+  }
+
+  function processJuryVotes() {
+    // Фильтруем голоса, оставленные ИМЕННО ТЕКУЩИМ судьей
+    var myVotes = juryVotesData.filter(function(v) { return v.juryId === currentJuryId; });
+    
+    // Обнуляем трекер баллов в дизайне
+    var badges = document.querySelectorAll(".score-badge");
+    badges.forEach(function(b) { b.classList.remove("used"); });
+
+    // Отмечаем занятые баллы
+    var usedScores = myVotes.map(function(v) { return String(v.score); });
+    usedScores.forEach(function(score) {
+      var badge = document.querySelector('.score-badge[data-score="' + score + '"]');
+      if (badge) badge.classList.add("used");
+    });
+
+    // Рендерим таблицу истории судьи
+    var historyBox = document.getElementById("juryHistoryList");
+    if (myVotes.length === 0) {
+      historyBox.innerHTML = '<p style="color:var(--text-dim); font-size:13px; text-align:center; padding:10px 0;">Вы еще не выставили ни одного балла.</p>';
+      return;
+    }
+
+    var html = "";
+    myVotes.sort(function(a,b) { return b.score - a.score; }); // Высокие баллы сверху
+    for (var j = 0; j < myVotes.length; j++) {
+      var v = myVotes[j];
+      html += '<div class="history-row">' +
+        '<span><b>' + escapeHtml(v.participantClass) + '</b> (' + escapeHtml(v.participantCountry) + ')</span>' +
+        '<span class="history-points">+' + v.score + '</span>' +
+      '</div>';
+    }
+    historyBox.innerHTML = html;
+  }
+
+  // Отправка оценки в базу
+  document.getElementById("submitJuryVoteBtn").addEventListener("click", function() {
+    var pId = document.getElementById("voteParticipantSelect").value;
+    var score = document.getElementById("voteScoreSelect").value;
+    var errorEl = document.getElementById("formError");
+
+    if (!pId || !score) {
+      errorEl.textContent = "Выберите конкурсанта и выставляемый балл.";
+      return;
+    }
+
+    var myVotes = juryVotesData.filter(function(v) { return v.juryId === currentJuryId; });
+
+    // Проверка 1: Не ставил ли судья УЖЕ этот балл кому-то другому
+    var scoreAlreadyUsed = myVotes.some(function(v) { return String(v.score) === String(score); });
+    if (scoreAlreadyUsed) {
+      errorEl.textContent = "Вы уже отдали оценку " + score + " баллов другому участнику.";
+      return;
+    }
+
+    // Проверка 2: Не голосовал ли судья уже за этот класс
+    var participantAlreadyVoted = myVotes.some(function(v) { return v.participantId === pId; });
+    if (participantAlreadyVoted) {
+      errorEl.textContent = "Вы уже выставили оценку этому классу в рамках текущего протокола.";
+      return;
+    }
+
+    // Ищем данные выбранного класса для сохранения красивых лейблов
+    var targetParticipant = approvedParticipants.find(function(p) { return p.id === pId; });
+    if (!targetParticipant) return;
+
+    var newJuryVote = {
+      id: "jvote_" + Date.now().toString(36),
+      juryId: currentJuryId,
+      juryName: currentJuryName,
+      participantId: pId,
+      participantClass: targetParticipant.className,
+      participantCountry: targetParticipant.country,
+      score: parseInt(score, 10),
+      timestamp: Date.now()
+    };
+
+    var updatedItems = juryVotesData.concat([newJuryVote]);
+
+    juryVotesDocRef.set({ items: updatedItems }, { merge: true }).then(function() {
+      errorEl.textContent = "";
+      document.getElementById("voteParticipantSelect").value = "";
+      document.getElementById("voteScoreSelect").value = "";
+    }).catch(function(err) {
+      console.error("Jury vote save error: ", err);
+      errorEl.textContent = "Ошибка бд при отправке протокола.";
+    });
+  });
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split('"').join("&quot;");
+  }
+</script>
+</body>
+</html>

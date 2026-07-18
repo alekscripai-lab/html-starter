@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCHOOLVISION — Платформа Голосования</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-deep: #060314;
+    --bg-deep2: #0f0a26;
+    --bg-panel: rgba(255,255,255,0.045);
+    --border-glow: rgba(255,255,255,0.08);
+    --neon-magenta: #ff2ec4;
+    --neon-cyan: #26e5ff;
+    --neon-gold: #ffd166;
+    --text-light: #f4f0ff;
+    --text-dim: #b9aed6;
+  }
+
+  html, body {
+    background: radial-gradient(ellipse at 50% -20%, #1f0d3d 0%, var(--bg-deep) 70%), var(--bg-deep);
+    color: var(--text-light);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  .display { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+  .script-font { font-family: 'Caveat', cursive; }
+
+  header.nav {
+    padding: 16px 32px;
+    background: rgba(6, 3, 20, 0.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-glow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-text { font-size: 20px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  .btn-back {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .btn-back:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(38, 229, 255, 0.3);
+    color: #fff;
+  }
+
+  /* Центральная зона с заголовком */
+  .hero-voting {
+    text-align: center;
+    padding: 40px 24px 20px;
+  }
+  .main-title {
+    font-size: clamp(36px, 6vw, 56px);
+    color: #fff;
+    background: linear-gradient(90deg, #ff2ec4, #ff7bf0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 4px;
+  }
+  .hero-slogan {
+    font-size: 24px;
+    color: var(--neon-gold);
+    margin-bottom: 20px;
+  }
+
+  .status-container { margin-bottom: 30px; }
+  .status-plate { display: inline-block; padding: 8px 20px; border-radius: 999px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .status-open { background: rgba(38,229,255,0.1); border: 1px solid var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 15px rgba(38,229,255,0.2); }
+  .status-closed { background: rgba(255,255,255,0.05); border: 1px solid var(--border-glow); color: var(--text-dim); }
+  .status-voted { background: rgba(107,255,176,0.1); border: 1px solid #6bffb0; color: #6bffb0; }
+
+  /* БЛОК ИНСТРУКЦИИ ИЗ МАКЕТА (Крупный и четкий) */
+  .instructions-card {
+    max-width: 760px;
+    margin: 0 auto 40px;
+    background: rgba(15, 10, 38, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px 30px;
+    text-align: left;
+    backdrop-filter: blur(10px);
+  }
+  .instructions-card h3 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neon-gold);
+    margin-bottom: 16px;
+  }
+  .instructions-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .instructions-list li {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-light);
+  }
+  .instructions-list b {
+    color: var(--neon-cyan);
+  }
+
+  /* Сетка карточек участников */
+  .grid-container { max-width: 1000px; margin: 0 auto; padding: 0 24px 120px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .participant-card { background: var(--bg-deep2); border: 1px solid var(--border-glow); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all .25s ease; position: relative; display: flex; flex-direction: column; }
+  .participant-card:hover { transform: translateY(-4px); border-color: rgba(38,229,255,0.4); box-shadow: 0 8px 25px rgba(38,229,255,0.15); }
+  .participant-card.selected { border-color: var(--neon-magenta); box-shadow: 0 0 25px rgba(255,46,196,0.3); }
+  .participant-card.locked { opacity: 0.75; cursor: not-allowed; transform: none !important; box-shadow: none !important; border-color: var(--border-glow); }
+
+  .card-top { padding: 20px; text-align: center; color: #fff; position: relative; }
+  .card-number { position: absolute; top: 12px; left: 14px; font-size: 11px; font-weight: 800; opacity: 0.5; background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; }
+  .card-year { position: absolute; top: 12px; right: 14px; font-size: 11px; font-weight: 700; opacity: 0.5; }
+  .card-flag { font-size: 42px; margin-bottom: 4px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+  .card-country { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: -0.01em; }
+  
+  .card-bottom { padding: 18px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .card-class { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+  .card-song { font-size: 13px; color: var(--text-dim); line-height: 1.3; }
+  .card-select-btn { margin-top: 14px; width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border-glow); background: rgba(255,255,255,0.03); color: var(--text-light); font-weight: 700; font-size: 12px; cursor: pointer; transition: all .2s; text-transform: uppercase; }
+  .participant-card.selected .card-select-btn { background: var(--neon-magenta); border-color: transparent; color: #fff; box-shadow: 0 0 10px rgba(255,46,196,0.4); }
+  .participant-card.locked .card-select-btn { display: none; }
+
+  .empty-state { grid-column: 1 / -1; text-align: center; color: var(--text-dim); padding: 40px 0; font-size: 15px; }
+
+  /* Нижняя плавающая панель */
+  .floating-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); width: calc(100% - 48px); max-width: 500px; background: rgba(15, 10, 38, 0.85); backdrop-filter: blur(16px); border: 1px solid var(--neon-magenta); box-shadow: 0 10px 40px rgba(255,46,196,0.25); border-radius: 999px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 90; transition: bottom 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .floating-bar.active { bottom: 24px; }
+  .bar-btn { background: linear-gradient(90deg, var(--neon-magenta), #a020f0); border: none; padding: 12px 28px; border-radius: 999px; color: #fff; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 0 15px rgba(255,46,196,0.4); }
+
+  /* Модальные окна */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(4,2,12,0.85); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.active { display: flex; }
+  .modal-box { background: var(--bg-deep2); border: 1px solid var(--border-glow); border-radius: 20px; max-width: 420px; width: 100%; padding: 30px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .modal-close { position: absolute; top: 16px; right: 18px; background: none; border: none; color: var(--text-dim); font-size: 22px; cursor: pointer; }
+  .modal-title { font-size: 22px; margin-bottom: 16px; color: #fff; }
+
+  input[type="text"], input[type="password"] { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glow); border-radius: 10px; padding: 12px 14px; color: #fff; font-family: inherit; font-size: 14px; outline: none; margin-bottom: 12px; }
+  input:focus { border-color: var(--neon-cyan); }
+  .warn-text { color: var(--neon-magenta); font-size: 13px; margin-bottom: 12px; min-height: 18px; }
+
+  footer { padding: 40px 24px 60px; text-align: center; border-top: 1px solid var(--border-glow); }
+  .admin-discrete { font-size: 12px; color: var(--text-dim); opacity: 0.5; }
+  .admin-discrete:hover { opacity: 1; text-decoration: underline; }
+
+  /* Панель администратора */
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-glow); padding-bottom: 10px; }
+  .admin-tab-btn { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border-glow); background: transparent; color: var(--text-dim); cursor: pointer; font-size: 12px; font-weight: 700; }
+  .admin-tab-btn.active { background: var(--neon-cyan); color: #000; border-color: transparent; }
+  .admin-panel { display: none; }
+  .admin-panel.active { display: block; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-glow); padding: 12px; border-radius: 10px; text-align: center; }
+  .stat-card .num { font-size: 20px; font-weight: 800; color: var(--neon-cyan); }
+  .stat-card .lbl { font-size: 10px; text-transform: uppercase; color: var(--text-dim); }
+
+  .live-feed-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+  .live-feed-item { display: flex; justify-content: space-between; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 4px; }
+  .live-feed-item .time { color: var(--text-dim); }
+
+  .danger-btn { background: linear-gradient(90deg, #ff4747, #a80000); border: none; color: #fff; padding: 10px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: 700; margin-top: 15px; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="btn-back">← Назад на сайт</a>
+  <span class="logo-text display">SCHOOLVISION VOTING</span>
+</header>
+
+<div class="hero-voting">
+  <h1 class="main-title display">Выбери фаворита</h1>
+  <div class="hero-slogan script-font">United by Music</div>
+  
+  <div class="status-container">
+    <div class="status-plate status-closed" id="statusPlate">Загрузка статуса...</div>
+  </div>
+</div>
+
+<!-- БЛОК ИНСТРУКЦИИ ИЗ МАКЕТА -->
+<div class="instructions-card">
+  <h3>Как проходит голосование</h3>
+  <ul class="instructions-list">
+    <li><b>1.</b> Дождитесь, пока плашка наверху покажет «Голосование открыто».</li>
+    <li><b>2.</b> Выберите карточку участника, который вам больше понравился.</li>
+    <li><b>3.</b> Нажмите кнопку «Голосовать за ...» внизу экрана.</li>
+    <li><b>4.</b> Введите своё имя и класс — так голос засчитывается только один раз с одного устройства и от одного человека.</li>
+    <li><b>5.</b> Подтвердите голос: карточки заблокируются, а статус изменится на «Голос учтён — спасибо!».</li>
+  </ul>
+</div>
+
+<div class="grid-container" id="participantsGrid"></div>
+
+<!-- Плавающая панель фиксации выбора -->
+<div class="floating-bar" id="floatingVoteBar">
+  <span style="font-size:13px; color:var(--text-dim);">Выбор сделан!</span>
+  <button class="bar-btn" id="mainVoteBtn">Проголосовать</button>
+</div>
+
+<!-- ОКНО ПОДТВЕРЖДЕНИЯ ГОЛОСА -->
+<div class="modal-overlay" id="voterModalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" data-close="voterModalOverlay">&times;</button>
+    <h3 class="modal-title display">Подтверждение голоса</h3>
+    <p style="font-size:13px; color:var(--text-dim); margin-bottom:14px;">Система защиты: введите Ваши Имя и Фамилию. Запрещено голосовать дважды.</p>
+    <label style="font-size:11px; text-transform:uppercase; color:var(--text-dim); display:block; margin-bottom:4px;">Ваше Имя Фамилия</label>
+    <input type="text" id="voterNameInput" placeholder="Например: Иван Иванов">
+    <div class="warn-text" id="voterWarning"></div>
+    <button class="btn bar-btn" id="voterSubmitBtn" style="width:100%; border-radius:10px;">Отправить голос ⚡</button>
+  </div>
+</div>
+
+<!-- АДМИН-ВХОД -->
+<div class="modal-overlay" id="adminLoginOverlay">
+  <div class="modal-box" style="max-width:360px;">
+    <button class="modal-close" data-close="adminLoginOverlay">&times;</button>
+    <h3 class="modal-title display">Панель управления</h3>
+    <input type="password" id="adminPasswordInput" placeholder="Введите пароль">
+    <div class="warn-text" id="adminLoginError"></div>
+    <button class="btn bar-btn" id="adminLoginSubmit" style="width:100%; border-radius:10px;">Войти</button>
+  </div>
+</div>
+
+<!-- АДМИН-ПАНЕЛЬ С РЕЗУЛЬТАТАМИ ЖЮРИ И ЗАЛА -->
+<div class="modal-overlay" id="adminPanelOverlay">
+  <div class="modal-box" style="max-width:680px; width:100%;">
+    <button class="modal-close" data-close="adminPanelOverlay">&times;</button>
+    <h3 class="modal-title display">Монитор результатов</h3>
+    
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" data-tab="live">Живой процесс</button>
+      <button class="admin-tab-btn" id="showResultsBtn" data-tab="results">Итоги (Зал + Жюри)</button>
+    </div>
+
+    <!-- ВКЛАДКА МОНИТОРИНГА -->
+    <div class="admin-panel active" id="tab-live">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="num" id="statTotalVotes">0</div><div class="lbl">Голосов зала</div></div>
+        <div class="stat-card"><div class="num" id="statLastMinute">0</div><div class="lbl">За 1 мин.</div></div>
+        <div class="stat-card"><div class="num" id="statParticipants">0</div><div class="lbl">В топе</div></div>
+      </div>
+      <h4 style="margin-bottom:8px; font-size:13px; color:var(--neon-cyan);">Лента кликов зрителей:</h4>
+      <div class="live-feed-box" id="liveFeed"></div>
+      
+      <button class="danger-btn" id="resetVotesBtn">🗑️ Сбросить всё голосование</button>
+    </div>
+
+    <!-- ВКЛАДКА СВОДНОЙ ТАБЛИЦЫ -->
+    <div class="admin-panel" id="tab-results">
+      <div id="leaderboard">
+        <p style="color:var(--text-dim); text-align:center; padding:20px 0;">Нажмите «Итоги», чтобы загрузить математическую матрицу.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="#" id="adminEntryLink" class="admin-discrete">Вход для администрации</a>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyAmoYfyEXAC-mZo8BpWRFmqH914X9KYCw0",
+    authDomain: "schoolvision-2027.firebaseapp.com",
+    projectId: "schoolvision-2027",
+    storageBucket: "schoolvision-2027.firebasestorage.app",
+    messagingSenderId: "435486727960",
+    appId: "1:435486727960:web:88aaf74cb09068b867486d"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  function escapeHtml(str) {
+    if (str === null || str === undefined) { return ""; }
+    return String(str).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split('"').join("&quot;");
+  }
+
+  function generateId() {
+    return "vote_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
+  }
+
+  function normalizeVoterKey(name) {
+    return name.toLowerCase().split(" ").join("").split("\t").join("");
+  }
+
+  var EUROVISION_COUNTRIES = [
+    { name: "Австрия", flag: "🇦🇹" }, { name: "Австралия", flag: "🇦🇺" }, { name: "Азербайджан", flag: "🇦🇿" }, 
+    { name: "Албания", flag: "🇦🇱" }, { name: "Армения", flag: "🇦🇲" }, { name: "Бельгия", flag: "🇧🇪" },
+    { name: "Болгария", flag: "🇧🇬" }, { name: "Великобритания", flag: "🇬🇧" }, { name: "Германия", flag: "🇩🇪" }, 
+    { name: "Греция", flag: "🇬🇷" }, { name: "Грузия", flag: "🇬🇪" }, { name: "Дания", flag: "🇩🇰" },
+    { name: "Ирландия", flag: "🇮🇪" }, { name: "Исландия", flag: "🇮🇸" }, { name: "Испания", flag: "🇪🇸" }, 
+    { name: "Италия", flag: "🇮🇹" }, { name: "Кипр", flag: "🇨🇾" }, { name: "Латвия", flag: "🇱🇻" }, 
+    { name: "Литва", flag: "🇱🇹" }, { name: "Мальта", flag: "🇲🇹" }, { name: "Молдова", flag: "🇲🇩" }, 
+    { name: "Нидерланды", flag: "🇳🇱" }, { name: "Норвегия", flag: "🇳🇴" }, { name: "Польша", flag: "🇵🇱" }, 
+    { name: "Португалия", flag: "🇵🇹" }, { name: "Румыния", flag: "🇷🇴" }, { name: "Сан-Марино", flag: "🇸🇲" }, 
+    { name: "Сербия", flag: "🇷🇸" }, { name: "Словения", flag: "🇸🇮" }, { name: "Украина", flag: "🇺🇦" }, 
+    { name: "Финляндия", flag: "🇫🇮" }, { name: "Франция", flag: "🇫🇷" }, { name: "Хорватия", flag: "🇭🇷" }, 
+    { name: "Чехия", flag: "🇨🇿" }, { name: "Швейцария", flag: "🇨🇭" }, { name: "Швеция", flag: "🇸🇪" }, 
+    { name: "Эстония", flag: "🇪🇪" }
+  ];
+
+  function getCountryFlag(countryName) {
+    for (var i = 0; i < EUROVISION_COUNTRIES.length; i++) {
+      if (EUROVISION_COUNTRIES[i].name === countryName) return EUROVISION_COUNTRIES[i].flag;
+    }
+    return "🏳️";
+  }
+
+  var NEON_GRADIENTS = [
+    "linear-gradient(135deg, #ff2ec4, #7b2ff7)",
+    "linear-gradient(135deg, #26e5ff, #1c5cff)",
+    "linear-gradient(135deg, #ffd166, #ff6b6b)"
+  ];
+
+  function gradientForId(id) {
+    var sum = 0;
+    for (var i = 0; i < id.length; i++) { sum += id.charCodeAt(i); }
+    return NEON_GRADIENTS[sum % NEON_GRADIENTS.length];
+  }
+
+  var votingOpen = false;
+  var approvedApplications = [];
+  var votesData = [];
+  var juryVotesData = [];
+  var selectedApplicationId = null;
+  var isAdmin = false;
+  var resultsVisible = false;
+
+  var contentDocRef = db.collection("schoolvision").doc("site:content");
+  var applicationsDocRef = db.collection("schoolvision").doc("applications:list");
+  var votesDocRef = db.collection("schoolvision").doc("voting:votes");
+  var juryVotesDocRef = db.collection("schoolvision").doc("voting:jury_votes");
+
+  contentDocRef.onSnapshot(function (snap) {
+    votingOpen = snap.exists ? !!snap.data().votingOpen : false;
+    renderStatusPlate(); renderGrid();
+  });
+
+  applicationsDocRef.onSnapshot(function (snap) {
+    var allItems = snap.exists ? (snap.data().items || []) : [];
+    approvedApplications = allItems.filter(function(i) { return i.status === "approved"; });
+    renderGrid();
+  });
+
+  votesDocRef.onSnapshot(function (snap) {
+    votesData = snap.exists ? (snap.data().items || []) : [];
+    renderStatusPlate(); renderLiveStats();
+    if (resultsVisible) renderLeaderboard();
+  });
+
+  juryVotesDocRef.onSnapshot(function (snap) {
+    juryVotesData = snap.exists ? (snap.data().items || []) : [];
+    renderJuryLiveFeed();
+    if (resultsVisible) renderLeaderboard();
+  });
+
+  function hasLocalVote() { return !!localStorage.getItem("schoolvision_vote_id"); }
+
+  function renderStatusPlate() {
+    var el = document.getElementById("statusPlate");
+    if (hasLocalVote()) {
+      el.className = "status-plate status-voted"; el.textContent = "Голос учтен — спасибо!"; return;
+    }
+    el.className = votingOpen ? "status-plate status-open" : "status-plate status-closed";
+    el.textContent = votingOpen ? "Голосование открыто" : "Голосование закрыто";
+  }
+
+  function renderGrid() {
+    var grid = document.getElementById("participantsGrid");
+    var voted = hasLocalVote();
+    if (approvedApplications.length === 0) {
+      grid.innerHTML = '<div class="empty-state">Участники появятся после одобрения их заявок в админке.</div>'; return;
+    }
+    var html = "";
+    for (var i = 0; i < approvedApplications.length; i++) {
+      var app = approvedApplications[i];
+      var isSelected = (selectedApplicationId === app.id);
+      html += '<div class="participant-card' + (isSelected ? " selected" : "") + ((voted || !votingOpen) ? " locked" : "") + '" data-app-id="' + app.id + '">' +
+        '<div class="card-top" style="background:' + gradientForId(app.id) + ';">' +
+          '<div class="card-number">№' + (i + 1) + '</div><div class="card-year">' + escapeHtml(app.year) + '</div>' +
+          '<div class="card-flag">' + getCountryFlag(app.country) + '</div><div class="card-country">' + escapeHtml(app.country) + '</div>' +
+        '</div>' +
+        '<div class="card-bottom">' +
+          '<div><div class="card-class">' + escapeHtml(app.className) + '</div><div class="card-song">' + escapeHtml(app.song) + '</div></div>' +
+          '<button type="button" class="card-select-btn">Выбрать</button>' +
+        '</div>' +
+      '</div>';
+    }
+    grid.innerHTML = html;
+
+    grid.querySelectorAll(".participant-card").forEach(function(card) {
+      card.addEventListener("click", function () {
+        if (voted || !votingOpen) return;
+        selectedApplicationId = this.getAttribute("data-app-id");
+        renderGrid(); renderFloatingBar();
+      });
+    });
+  }
+
+  function renderFloatingBar() {
+    var bar = document.getElementById("floatingVoteBar");
+    var btn = document.getElementById("mainVoteBtn");
+    var app = approvedApplications.find(function(a) { return a.id === selectedApplicationId; });
+    if (!app || hasLocalVote() || !votingOpen) { bar.classList.remove("active"); return; }
+    btn.textContent = "Голосовать за " + app.className;
+    bar.classList.add("active");
+  }
+
+  document.getElementById("mainVoteBtn").addEventListener("click", function () { openModal("voterModalOverlay"); });
+
+  document.getElementById("voterSubmitBtn").addEventListener("click", function () {
+    var rawName = document.getElementById("voterNameInput").value.trim();
+    var warnEl = document.getElementById("voterWarning");
+    if (!rawName) { warnEl.textContent = "Введите ваше имя."; return; }
+
+    var key = normalizeVoterKey(rawName);
+    if (votesData.some(function(v) { return v.voterKey === key; })) {
+      warnEl.textContent = "Это имя уже принимало участие в голосовании."; return;
+    }
+
+    var voteId = generateId();
+    var updatedItems = votesData.concat([{ id: voteId, voterKey: key, voterDisplay: rawName, applicationId: selectedApplicationId, timestamp: Date.now() }]);
+
+    votesDocRef.set({ items: updatedItems }, { merge: true }).then(function () {
+      localStorage.setItem("schoolvision_vote_id", voteId);
+      closeModal("voterModalOverlay"); renderStatusPlate(); renderGrid(); renderFloatingBar();
+    });
+  });
+
+  function openModal(id) { document.getElementById(id).classList.add("active"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("active"); }
+  document.querySelectorAll(".modal-close").forEach(function(b) {
+    b.addEventListener("click", function() { closeModal(this.getAttribute("data-close")); });
+  });
+
+  document.getElementById("adminEntryLink").addEventListener("click", function (e) { e.preventDefault(); openModal("adminLoginOverlay"); });
+  document.getElementById("adminLoginSubmit").addEventListener("click", function () {
+    if (document.getElementById("adminPasswordInput").value === "vision2026") {
+      isAdmin = true; closeModal("adminLoginOverlay"); openModal("adminPanelOverlay"); renderLiveStats(); renderJuryLiveFeed();
+    } else { document.getElementById("adminLoginError").textContent = "Неверный пароль"; }
+  });
+
+  document.querySelectorAll(".admin-tab-btn").forEach(function(btn) {
+    btn.addEventListener("click", function () {
+      var target = this.getAttribute("data-tab");
+      document.querySelectorAll(".admin-tab-btn").forEach(function(x) { x.classList.remove("active"); });
+      document.querySelectorAll(".admin-panel").forEach(function(y) { y.classList.remove("active"); });
+      this.classList.add("active"); document.getElementById("tab-" + target).classList.add("active");
+    });
+  });
+
+  function renderLiveStats() {
+    if (!isAdmin) return;
+    document.getElementById("statTotalVotes").textContent = votesData.length;
+    var oneMinuteAgo = Date.now() - 60000;
+    document.getElementById("statLastMinute").textContent = votesData.filter(function(v) { return v.timestamp >= oneMinuteAgo; }).length;
+    document.getElementById("statParticipants").textContent = approvedApplications.length;
+
+    var sorted = votesData.slice().sort(function(a,b) { return b.timestamp - a.timestamp; }).slice(0, 15);
+    document.getElementById("liveFeed").innerHTML = sorted.map(function(v) {
+      var app = approvedApplications.find(function(a) { return a.id === v.applicationId; });
+      return '<div class="live-feed-item"><span>👥 ' + escapeHtml(v.voterDisplay) + ' → ' + escapeHtml(app ? app.className : "Участник") + '</span></div>';
+    }).join("") || '<p style="color:var(--text-dim);font-size:12px;">Зрители еще не присылали кликов.</p>';
+  }
+
+  function renderJuryLiveFeed() {
+    if (!isAdmin) return;
+    var container = document.getElementById("tab-live");
+    var feedId = "juryLiveFeedSection";
+    var feedEl = document.getElementById(feedId);
+    if (!feedEl) {
+      feedEl = document.createElement("div"); feedEl.id = feedId; feedEl.style.marginTop = "15px";
+      container.insertBefore(feedEl, document.getElementById("resetVotesBtn"));
+    }
+    var sortedJury = juryVotesData.slice().sort(function(a,b) { return b.timestamp - a.timestamp; });
+    var html = '<h4 style="margin-bottom:6px; font-size:13px; color:var(--neon-gold);">Протоколы жюри:</h4>' +
+               '<div style="max-height:120px; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:8px; padding:6px;">';
+    html += sortedJury.map(function(v) {
+      return '<div class="live-feed-item"><span>⚖️ ' + escapeHtml(v.juryName) + ' → ' + escapeHtml(v.participantClass) + '</span><span style="color:var(--neon-cyan);font-weight:700;">+' + v.score + ' б.</span></div>';
+    }).join("");
+    feedEl.innerHTML = html + '</div>';
+  }
+
+  document.getElementById("resetVotesBtn").addEventListener("click", function () {
+    if (!confirm("Внимание! Это сотрет все поданные голоса зала и протоколы жюри.")) return;
+    Promise.all([votesDocRef.set({ items: [] }), juryVotesDocRef.set({ items: [] })]).then(function() { localStorage.clear(); location.reload(); });
+  });
+
+  document.getElementById("showResultsBtn").addEventListener("click", function () { resultsVisible = true; renderLeaderboard(); });
+
+  function renderLeaderboard() {
+    var el = document.getElementById("leaderboard");
+    
+    var viewerClicks = {};
+    votesData.forEach(function(v) { viewerClicks[v.applicationId] = (viewerClicks[v.applicationId] || 0) + 1; });
+
+    var juryScores = {};
+    juryVotesData.forEach(function(v) { juryScores[v.participantId] = (juryScores[v.participantId] || 0) + v.score; });
+
+    var rows = approvedApplications.map(function(app) {
+      var clicks = viewerClicks[app.id] || 0;
+      var viewerWeightedPoints = clicks * 10;
+      var juryPoints = juryScores[app.id] || 0;
+      
+      return {
+        app: app,
+        clicks: clicks,
+        viewerPoints: viewerWeightedPoints,
+        juryPoints: juryPoints,
+        finalTotal: viewerWeightedPoints + juryPoints
+      };
+    });
+
+    rows.sort(function(a, b) { return b.finalTotal - a.finalTotal; });
+
+    var html = '<div style="overflow-x:auto; margin-top:10px;"><table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">' +
+      '<thead style="color:var(--neon-gold); border-bottom:1px solid var(--border-glow);">' +
+        '<tr><th style="padding:6px;">Место</th><th style="padding:6px;">Класс</th>' +
+        '<th style="padding:6px; text-align:center;">Зал (чел.)</th>' +
+        '<th style="padding:6px; text-align:center;">Зал (очки х10)</th>' +
+        '<th style="padding:6px; text-align:center;">Жюри (очки)</th>' +
+        '<th style="padding:6px; text-align:center; color:#fff;">СУММА</th></tr>' +
+      '</thead><tbody>';
+
+    if (rows.length === 0) {
+      html += '<tr><td colspan="6" style="padding:15px; text-align:center; color:var(--text-dim);">Участники отсутствуют.</td></tr>';
+    } else {
+      rows.forEach(function(r, index) {
+        html += '<tr style="border-bottom:1px solid rgba(255,255,255,0.03);">' +
+          '<td style="padding:8px; font-weight:800; color:var(--neon-gold);">' + (index + 1) + '</td>' +
+          '<td style="padding:8px;">' + getCountryFlag(r.app.country) + ' ' + escapeHtml(r.app.className) + '</td>' +
+          '<td style="padding:8px; text-align:center; color:var(--text-dim);">' + r.clicks + '</td>' +
+          '<td style="padding:8px; text-align:center; color:var(--neon-cyan); font-weight:700;">' + r.viewerPoints + '</td>' +
+          '<td style="padding:8px; text-align:center; color:var(--neon-magenta);">' + r.juryPoints + '</td>' +
+          '<td style="padding:8px; text-align:center; font-weight:800; font-size:13px; color:#fff;">' + r.finalTotal + '</td>' +
+        '</tr>';
+      });
+    }
+    el.innerHTML = html + '</tbody></table></div>';
+  }
+</script>
+</body>
+</html>
