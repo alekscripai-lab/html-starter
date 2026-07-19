@@ -1,32 +1,96 @@
 {
   "Австрия": {
-    "2024": {
-      "song": "We Will Rave",
-      "artist": "Kaleen"
-    },
-    "2023": {
-      "song": "Who the Hell Is Edgar?",
-      "artist": "Teya & Salena"
-    },
-    "2022": {
-      "song": "Halo",
-      "artist": "LUM!X feat. Pia Maria"
-    },
-    "2021": {
-      "song": "Amen",
-      "artist": "Vincent Bueno"
-    },
-    "2018": {
-      "song": "Nobody but You",
-      "artist": "César Sampson"
-    },
-    "2014": {
-      "song": "Rise Like a Phoenix",
-      "artist": "Conchita Wurst"
-    },
-    "1966": {
-      "song": "Merci, Chérie",
-      "artist": "Udo Jürgens"
+    "2000": {
+  "song": "All To You",
+  "artist": "The Rounder Girls"
+},
+"2001": {
+  "song": "Wenn der Himmel brennt",
+  "artist": "Manuel Ortega"
+},
+"2002": {
+  "song": "Say a Word",
+  "artist": "Manuel Ortega"
+},
+"2003": {
+  "song": "Weil der Mensch zählt",
+  "artist": "Alf Poier"
+},
+"2004": {
+  "song": "Du bist",
+  "artist": "Tie Break"
+},
+"2005": {
+  "song": "Y así",
+  "artist": "Global Kryner"
+},
+"2006": {
+  "song": "Get a Life – Get Alive",
+  "artist": "texas lightning"
+},
+"2011": {
+  "song": "The Secret Is Love",
+  "artist": "Nadine Beiler"
+},
+"2012": {
+  "song": "Woki mit deim Popo",
+  "artist": "Trackshittaz"
+},
+"2013": {
+  "song": "Shine",
+  "artist": "Natália Kelly"
+},
+"2014": {
+  "song": "Rise Like a Phoenix",
+  "artist": "Conchita Wurst"
+},
+"2015": {
+  "song": "I Am Yours",
+  "artist": "The Makemakes"
+},
+"2016": {
+  "song": "Loin d'ici",
+  "artist": "Zoë"
+},
+"2017": {
+  "song": "Running on Air",
+  "artist": "Nathan Trent"
+},
+"2018": {
+  "song": "Nobody but You",
+  "artist": "Cesár Sampson"
+},
+"2019": {
+  "song": "Limits",
+  "artist": "Paenda"
+},
+"2020": {
+  "song": "Alive",
+  "artist": "Vincent Bueno"
+},
+"2021": {
+  "song": "Amen",
+  "artist": "Vincent Bueno"
+},
+"2022": {
+  "song": "Halo",
+  "artist": "LUM!X feat. Pia Maria"
+},
+"2023": {
+  "song": "Who The Hell Is Edgar?",
+  "artist": "Teya & Salena"
+},
+"2024": {
+  "song": "We Will Rave",
+  "artist": "Kaleen"
+},
+"2025": {
+  "song": "Wasted Love",
+  "artist": "JJ"
+},
+"2026": {
+  "song": "Tanzschein",
+  "artist": "COSMÓ"
     }
   },
   "Австралия": {
