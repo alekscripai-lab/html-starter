@@ -399,7 +399,7 @@
   input[readonly] {
     background: rgba(255,255,255,0.02);
     color: #887fb0;
-    cursor: text;
+    cursor: not-allowed;
   }
   textarea { min-height: 90px; resize: vertical; }
 
@@ -670,11 +670,11 @@
             </div>
             <div>
               <label>Название трека (Автозаполнение)</label>
-              <input type="text" id="appSong" placeholder="Автоматический поиск..." readonly required>
+              <input type="text" id="appSong" placeholder="Выберите год для автозаполнения" readonly required>
             </div>
             <div>
               <label>Исполнитель (Автозаполнение)</label>
-              <input type="text" id="appArtist" placeholder="Автоматический поиск..." readonly required>
+              <input type="text" id="appArtist" placeholder="Выберите год для автозаполнения" readonly required>
             </div>
           </div>
           <div class="warn-text" id="appWarning"></div>
@@ -793,7 +793,7 @@
           <input type="checkbox" id="adminSystemModeCheckbox">
           <label style="margin: 0; font-weight: 700; color: #fff; cursor: pointer;">Включить ТЕСТОВЫЙ режим (Данные заявок изолируются)</label>
         </div>
-        <p class="small-note" style="color: var(--text-dim); margin-top: 4px;">При включении все заявки с сайта будут записываться в отдельный тестовый список, не смешиваясь с реальным концертом.</p>
+        <p class="small-note" style="color: var(--text-dim); margin-top: 4px;">При включении все заявки с сайта будут записываться in отдельный тестовый список, не смешиваясь с реальным концертом.</p>
       </div>
 
       <div class="form-grid">
@@ -882,45 +882,20 @@
     return "id_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
   }
 
-  // КАРТА УЧАСТИЯ СТРАН ПО ГОДАМ (Исключает пропуски, например Молдова 2025)
   var EUROVISION_COUNTRIES = [
-    { name: "Австрия", flag: "🇦🇹", en: "Austria", skipYears: [] },
-    { name: "Австралия", flag: "🇦🇺", en: "Australia", skipYears: [] },
-    { name: "Азербайджан", flag: "🇦🇿", en: "Azerbaijan", skipYears: [] }, 
-    { name: "Албания", flag: "🇦🇱", en: "Albania", skipYears: [] },
-    { name: "Армения", flag: "🇦🇲", en: "Armenia", skipYears: [2021] },
-    { name: "Бельгия", flag: "🇧🇪", en: "Belgium", skipYears: [] },
-    { name: "Болгария", flag: "🇧🇬", en: "Bulgaria", skipYears: [2014, 2015, 2019, 2023, 2024, 2025, 2026] },
-    { name: "Великобритания", flag: "🇬🇧", en: "UK", skipYears: [] },
-    { name: "Германия", flag: "🇩🇪", en: "Germany", skipYears: [] }, 
-    { name: "Греция", flag: "🇬🇷", en: "Greece", skipYears: [] },
-    { name: "Грузия", flag: "🇬🇪", en: "Georgia", skipYears: [] },
-    { name: "Дания", flag: "🇩🇰", en: "Denmark", skipYears: [] },
-    { name: "Ирландия", flag: "🇮🇪", en: "Ireland", skipYears: [] },
-    { name: "Исландия", flag: "🇮🇸", en: "Iceland", skipYears: [] },
-    { name: "Испасния", flag: "🇪🇸", en: "Spain", skipYears: [] }, 
-    { name: "Италия", flag: "🇮🇹", en: "Italy", skipYears: [1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010] },
-    { name: "Кипр", flag: "🇨🇾", en: "Cyprus", skipYears: [2014] },
-    { name: "Латвия", flag: "🇱🇻", en: "Latvia", skipYears: [] }, 
-    { name: "Литва", flag: "🇱🇹", en: "Lithuania", skipYears: [1995, 1996, 1997, 1998, 2000, 2003] },
-    { name: "Мальта", flag: "🇲🇹", en: "Malta", skipYears: [] },
-    { name: "Молдова", flag: "🇲🇩", en: "Moldova", skipYears: [2025] }, // Молдова снялась с конкурса в 2025 году
-    { name: "Нидерланды", flag: "🇳🇱", en: "Netherlands", skipYears: [1995, 2002] },
-    { name: "Норвегия", flag: "🇳🇴", en: "Norway", skipYears: [2002] },
-    { name: "Польша", flag: "🇵🇱", en: "Poland", skipYears: [2002, 2012, 2013] }, 
-    { name: "Португалия", flag: "🇵🇹", en: "Portugal", skipYears: [2000, 2002, 2013, 2016] },
-    { name: "Румыния", flag: "🇷🇴", en: "Romania", skipYears: [2016, 2024, 2025, 2026] },
-    { name: "Сан-Марино", flag: "🇸🇲", en: "San Marino", skipYears: [2009, 2010] }, 
-    { name: "Сербия", flag: "🇷🇸", en: "Serbia", skipYears: [2014] },
-    { name: "Словения", flag: "🇸🇮", en: "Slovenia", skipYears: [2000] },
-    { name: "Украина", flag: "🇺🇦", en: "Ukraine", skipYears: [2015, 2019] }, 
-    { name: "Финляндия", flag: "🇫🇮", en: "Finland", skipYears: [1995, 1997, 1999, 2001] },
-    { name: "Франция", flag: "🇫🇷", en: "France", skipYears: [] },
-    { name: "Хорватия", flag: "🇭🇷", en: "Croatia", skipYears: [2014, 2015] }, 
-    { name: "Чехия", flag: "🇨🇿", en: "Czechia", skipYears: [2010, 2011, 2012, 2013, 2014] },
-    { name: "Швейцария", flag: "🇨🇭", en: "Switzerland", skipYears: [1995, 1999, 2001, 2003] },
-    { name: "Швеция", flag: "🇸🇪", en: "Sweden", skipYears: [] }, 
-    { name: "Эстония", flag: "🇪🇪", en: "Estonia", skipYears: [1995] }
+    { name: "Австрия", flag: "🇦🇹" }, { name: "Австралия", flag: "🇦🇺" }, { name: "Азербайджан", flag: "🇦🇿" }, 
+    { name: "Албания", flag: "🇦🇱" }, { name: "Армения", flag: "🇦🇲" }, { name: "Бельгия", flag: "🇧🇪" },
+    { name: "Болгария", flag: "🇧🇬" }, { name: "Великобритания", flag: "🇬🇧" }, { name: "Германия", flag: "🇩🇪" }, 
+    { name: "Греция", flag: "🇬🇷" }, { name: "Грузия", flag: "🇬🇪" }, { name: "Дания", flag: "🇩🇰" },
+    { name: "Ирландия", flag: "🇮🇪" }, { name: "Исландия", flag: "🇮🇸" }, { name: "Испания", flag: "🇪🇸" }, 
+    { name: "Италия", flag: "🇮🇹" }, { name: "Кипр", flag: "🇨🇾" }, { name: "Латвия", flag: "🇱🇻" }, 
+    { name: "Литва", flag: "🇱🇹" }, { name: "Мальта", flag: "🇲🇹" }, { name: "Молдова", flag: "🇲🇩" }, 
+    { name: "Нидерланды", flag: "🇳🇱" }, { name: "Норвегия", flag: "🇳🇴" }, { name: "Польша", flag: "🇵🇱" }, 
+    { name: "Португалия", flag: "🇵🇹" }, { name: "Румыния", flag: "🇷🇴" }, { name: "Сан-Марино", flag: "🇸🇲" }, 
+    { name: "Сербия", flag: "🇷🇸" }, { name: "Словения", flag: "🇸🇮" }, { name: "Украина", flag: "🇺🇦" }, 
+    { name: "Финляндия", flag: "🇫🇮" }, { name: "Франция", flag: "🇫🇷" }, { name: "Хорватия", flag: "🇭🇷" }, 
+    { name: "Чехия", flag: "🇨🇿" }, { name: "Швейцария", flag: "🇨🇭" }, { name: "Швеция", flag: "🇸🇪" }, 
+    { name: "Эстония", flag: "🇪🇪" }
   ];
 
   function getCountryFlag(countryName) {
@@ -928,13 +903,6 @@
       if (EUROVISION_COUNTRIES[i].name === countryName) return EUROVISION_COUNTRIES[i].flag;
     }
     return "🏳️";
-  }
-
-  function getCountryObject(countryName) {
-    for (var i = 0; i < EUROVISION_COUNTRIES.length; i++) {
-      if (EUROVISION_COUNTRIES[i].name === countryName) return EUROVISION_COUNTRIES[i];
-    }
-    return null;
   }
 
   var DEFAULT_RULES_OBJ = [
@@ -952,6 +920,7 @@
   var applicationsData = [];
   var questionsData = [];
   var isAdmin = false;
+  var songsDatabase = {}; // Здесь будет храниться локальный JSON-архив
 
   function populateCountrySelect() {
     var el = document.getElementById("appCountry");
@@ -965,9 +934,15 @@
 
   populateCountrySelect();
 
+  // Загружаем наш локальный JSON-архив при старте страницы
+  fetch("eurovision-db.json")
+    .then(function(res) { return res.json(); })
+    .then(function(data) { songsDatabase = data; })
+    .catch(function(err) { console.error("Не удалось загрузить локальный файл eurovision-db.json: ", err); });
+
+  // Заполнение годов СТРОГО на основе прописанных в JSON-файле для этой страны
   document.getElementById("appCountry").addEventListener("change", function() {
     var countryName = this.value;
-    var countryObj = getCountryObject(countryName);
     var yearEl = document.getElementById("appYear");
     
     yearEl.innerHTML = '<option value="" disabled selected>Выберите год</option>';
@@ -975,16 +950,20 @@
     
     document.getElementById("appSong").value = "";
     document.getElementById("appArtist").value = "";
-    document.getElementById("appSong").placeholder = "Поиск официального трека...";
-    document.getElementById("appArtist").placeholder = "Поиск исполнителя...";
-    document.getElementById("appSong").readOnly = true;
-    document.getElementById("appArtist").readOnly = true;
+    document.getElementById("appSong").placeholder = "Выберите год для автозаполнения";
+    document.getElementById("appArtist").placeholder = "Выберите год для автозаполнения";
 
-    if (countryObj) {
+    // Ищем доступные года в нашей точной JSON-базе
+    if (songsDatabase[countryName]) {
+      var years = Object.keys(songsDatabase[countryName]).sort(function(a, b) { return b - a; });
+      for (var i = 0; i < years.length; i++) {
+        var opt = document.createElement("option");
+        opt.value = years[i]; opt.textContent = years[i];
+        yearEl.appendChild(opt);
+      }
+    } else {
+      // Если страны еще нет в JSON-файле, выведем резервный список, но откроем ручной ввод
       for (var y = 2026; y >= 1956; y--) {
-        // Проверка: выступала ли выбранная страна в этом году на реальном Евровидении
-        if (countryObj.skipYears.indexOf(y) !== -1) continue;
-        
         var opt = document.createElement("option");
         opt.value = y; opt.textContent = y;
         yearEl.appendChild(opt);
@@ -993,72 +972,33 @@
     checkDuplicate();
   });
 
-  // УЛУЧШЕННЫЙ И ТОЧНЫЙ КРИТЕРИЙ АВТОЗАПОЛНЕНИЯ ПЕСНИ
+  // 100% ТОЧНОЕ ЗАПОЛНЕНИЕ ИЗ СОБСТВЕННОГО JSON-ФАЙЛА
   document.getElementById("appYear").addEventListener("change", function() {
-    var countryRU = document.getElementById("appCountry").value;
+    var country = document.getElementById("appCountry").value;
     var year = this.value;
-    if (!countryRU || !year) return;
+    if (!country || !year) return;
 
     var songInput = document.getElementById("appSong");
     var artistInput = document.getElementById("appArtist");
-    var warnEl = document.getElementById("appWarning");
 
-    songInput.placeholder = "Ищем трек в глобальной базе iTunes...";
-    artistInput.placeholder = "Ищем исполнителя...";
-    warnEl.textContent = "";
-
-    var countryObj = getCountryObject(countryRU);
-    var countryEN = countryObj ? countryObj.en : countryRU;
+    if (songsDatabase[country] && songsDatabase[country][year]) {
+      var track = songsDatabase[country][year];
+      songInput.value = track.song;
+      artistInput.value = track.artist;
+      songInput.readOnly = true;
+      artistInput.readOnly = true;
+    } else {
+      // Бэкап: если связки нет в JSON, разрешаем судьям/ученикам вписать трек руками
+      songInput.value = "";
+      artistInput.value = "";
+      songInput.placeholder = "Комбинация не найдена в JSON. Введите вручную...";
+      artistInput.placeholder = "Введите исполнителя...";
+      songInput.readOnly = false;
+      artistInput.readOnly = false;
+    }
     
-    // Формируем строгий поисковый запрос
-    var primaryQuery = encodeURIComponent("Eurovision " + year + " " + countryEN);
-    
-    fetch("https://itunes.apple.com/search?term=" + primaryQuery + "&entity=song&limit=4")
-      .then(function(res) { return res.json(); })
-      .then(function(data) {
-        if (data.results && data.results.length > 0) {
-          // Ищем наиболее точный трек, содержащий упоминание Eurovision или имя артиста нужного года
-          var bestTrack = data.results[0];
-          applyTrackData(bestTrack);
-        } else {
-          // Запасной вариант поискового запроса
-          var secondaryQuery = encodeURIComponent(countryEN + " " + year);
-          return fetch("https://itunes.apple.com/search?term=" + secondaryQuery + "&entity=song&limit=2")
-            .then(function(res) { return res.json(); })
-            .then(function(data2) {
-              if (data2.results && data2.results.length > 0) {
-                applyTrackData(data2.results[0]);
-              } else {
-                allowManualInput("Песня не найдена автоматически. Заполните вручную.");
-              }
-            });
-        }
-      })
-      .catch(function() {
-        allowManualInput("Сбой сети. Заполните поля вручную...");
-      });
-      
-      checkDuplicate();
+    checkDuplicate();
   });
-
-  function applyTrackData(track) {
-    var cleanSong = track.trackName.replace(/\s*\(.*?Eurovision.*?\)\s*/gi, '').replace(/\s*-.*?Eurovision.*?\s*/gi, '');
-    document.getElementById("appSong").value = cleanSong;
-    document.getElementById("appArtist").value = track.artistName;
-    document.getElementById("appSong").readOnly = true;
-    document.getElementById("appArtist").readOnly = true;
-  }
-
-  function allowManualInput(placeholderText) {
-    var songInput = document.getElementById("appSong");
-    var artistInput = document.getElementById("appArtist");
-    songInput.value = "";
-    artistInput.value = "";
-    songInput.placeholder = placeholderText;
-    artistInput.placeholder = "Введите имя исполнителя...";
-    songInput.readOnly = false;
-    artistInput.readOnly = false;
-  }
 
   function renderContent() {
     document.getElementById("infoDate").textContent = contentData.date || "Скоро объявим";
