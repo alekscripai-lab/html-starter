@@ -94,320 +94,880 @@
     }
   },
   "Австралия": {
-    "2024": {
-      "song": "One Milkali (One Blood)",
-      "artist": "Electric Fields"
-    },
-    "2023": {
-      "song": "Promise",
-      "artist": "Voyager"
-    },
-    "2022": {
-      "song": "Not the Same",
-      "artist": "Sheldon Riley"
-    },
-    "2021": {
-      "song": "Technicolour",
-      "artist": "Montaigne"
-    },
-    "2019": {
-      "song": "Zero Gravity",
-      "artist": "Kate Miller-Heidke"
-    },
-    "2016": {
-      "song": "Sound of Silence",
-      "artist": "Dami Im"
-    },
     "2015": {
-      "song": "Tonight Again",
-      "artist": "Guy Sebastian"
-    }
-  },
+  "song": "Tonight Again",
+  "artist": "Guy Sebastian"
+},
+"2016": {
+  "song": "Sound of Silence",
+  "artist": "Dami Im"
+},
+"2017": {
+  "song": "Don't Come Easy",
+  "artist": "Isaiah Firebrace"
+},
+"2018": {
+  "song": "We Got Love",
+  "artist": "Jessica Mauboy"
+},
+"2019": {
+  "song": "Zero Gravity",
+  "artist": "Kate Miller-Heidke"
+},
+"2020": {
+  "song": "Don't Break Me",
+  "artist": "Montaigne"
+},
+"2021": {
+  "song": "Technicolour",
+  "artist": "Montaigne"
+},
+"2022": {
+  "song": "Not The Same",
+  "artist": "Sheldon Riley"
+},
+"2023": {
+  "song": "Promise",
+  "artist": "Voyager"
+},
+"2024": {
+  "song": "One Milkali (One Blood)",
+  "artist": "Electric Fields"
+},
+"2025": {
+  "song": "Milkshake Man",
+  "artist": "Go-Jo"
+},
+"2026": {
+  "song": "Eclipse",
+  "artist": "Delta Goodrem"
+  }
+ },
   "Азербайджан": {
-    "2024": {
-      "song": "Özünlə apar",
-      "artist": "Fahree feat. Ilkin Dovlatov"
-    },
-    "2023": {
-      "song": "Tell Me More",
-      "artist": "TuralTuranX"
-    },
-    "2022": {
-      "song": "Fade to Black",
-      "artist": "Nadir Rustamli"
-    },
-    "2021": {
-      "song": "Mata Hari",
-      "artist": "Efendi"
-    },
-    "2019": {
-      "song": "Truth",
-      "artist": "Chingiz"
-    },
-    "2011": {
-      "song": "Running Scared",
-      "artist": "Ell & Nikki"
-    },
-    "2009": {
-      "song": "Always",
-      "artist": "AySel & Arash"
-    }
+    "2008": {
+  "song": "Day After Day",
+  "artist": "Elnur & Samir"
+},
+"2009": {
+  "song": "Always",
+  "artist": "AySel & Arash"
+},
+"2010": {
+  "song": "Drip Drop",
+  "artist": "Safura"
+},
+"2011": {
+  "song": "Running Scared",
+  "artist": "Ell & Nikki"
+},
+"2012": {
+  "song": "When the Music Dies",
+  "artist": "Sabina Babayeva"
+},
+"2013": {
+  "song": "Hold Me",
+  "artist": "Farid Mammadov"
+},
+"2014": {
+  "song": "Start a Fire",
+  "artist": "Dilara Kazimova"
+},
+"2015": {
+  "song": "Hour of the Wolf",
+  "artist": "Elnur Huseynov"
+},
+"2016": {
+  "song": "Miracle",
+  "artist": "Samra"
+},
+"2017": {
+  "song": "Skeletons",
+  "artist": "Dihaj"
+},
+"2018": {
+  "song": "X My Heart",
+  "artist": "Aisel"
+},
+"2019": {
+  "song": "Truth",
+  "artist": "Chingiz"
+},
+"2020": {
+  "song": "Cleopatra",
+  "artist": "Efendi"
+},
+"2021": {
+  "song": "Mata Hari",
+  "artist": "Efendi"
+},
+"2022": {
+  "song": "Fade to Black",
+  "artist": "Nadir Rustamli"
+},
+"2023": {
+  "song": "Tell Me More",
+  "artist": "TuralTuranX"
+},
+"2024": {
+  "song": "Özünlə Apar",
+  "artist": "FAHREE feat. Ilkin Dovlatov"
+},
+"2025": {
+  "song": "Run With U",
+  "artist": "Mamagama"
+},
+"2026": {
+  "song": "Just Go",
+  "artist": "JIVA"
+}
   },
   "Албания": {
-    "2024": {
-      "song": "TiTAN",
-      "artist": "Besa"
-    },
-    "2023": {
-      "song": "Duje",
-      "artist": "Albina & Familja Kelmendi"
-    },
-    "2022": {
-      "song": "Sekret",
-      "artist": "Ronela Hajati"
-    },
-    "2021": {
-      "song": "Karma",
-      "artist": "Anxhela Peristeri"
-    },
-    "2012": {
-      "song": "Suus",
-      "artist": "Rona Nishliu"
-    }
+    "2004": {
+  "song": "The Image of You",
+  "artist": "Anjeza Shahini"
+},
+"2005": {
+  "song": "Tomorrow I Go",
+  "artist": "Ledina Çelo"
+},
+"2006": {
+  "song": "Zjarr e ftohtë",
+  "artist": "Luiz Ejlli"
+},
+"2007": {
+  "song": "Hear My Plea",
+  "artist": "Frederik Ndoci & Aida"
+},
+"2008": {
+  "song": "Zemrën e lamë peng",
+  "artist": "Olta Boka"
+},
+"2009": {
+  "song": "Carry Me in Your Dreams",
+  "artist": "Kejsi Tola"
+},
+"2010": {
+  "song": "It's All About You",
+  "artist": "Juliana Pasha"
+},
+"2011": {
+  "song": "Feel the Passion",
+  "artist": "Aurela Gaçe"
+},
+"2012": {
+  "song": "Suus",
+  "artist": "Rona Nishliu"
+},
+"2013": {
+  "song": "Identitet",
+  "artist": "Adrian Lulgjuraj & Bledar Sejko"
+},
+"2014": {
+  "song": "One Night's Anger",
+  "artist": "Hersi"
+},
+"2015": {
+  "song": "I'm Alive",
+  "artist": "Elhaida Dani"
+},
+"2016": {
+  "song": "Fairytale",
+  "artist": "Eneda Tarifa"
+},
+"2017": {
+  "song": "World",
+  "artist": "Lindita"
+},
+"2018": {
+  "song": "Mall",
+  "artist": "Eugent Bushpepa"
+},
+"2019": {
+  "song": "Ktheju tokës",
+  "artist": "Jonida Maliqi"
+},
+"2020": {
+  "song": "Fall from the Sky",
+  "artist": "Arilena Ara"
+},
+"2021": {
+  "song": "Karma",
+  "artist": "Anxhela Peristeri"
+},
+"2022": {
+  "song": "Sekret",
+  "artist": "Ronela Hajati"
+},
+"2023": {
+  "song": "Duje",
+  "artist": "Albina & Familja Kelmendi"
+},
+"2024": {
+  "song": "Titan",
+  "artist": "BESA"
+},
+"2025": {
+  "song": "Zjerm",
+  "artist": "Shkodra Elektronike"
+},
+"2026": {
+  "song": "Nân",
+  "artist": "Alis"
+}
   },
   "Армения": {
-    "2024": {
-      "song": "Jako",
-      "artist": "Ladaniva"
-    },
-    "2023": {
-      "song": "Future Lover",
-      "artist": "Brunette"
-    },
-    "2022": {
-      "song": "Snap",
-      "artist": "Rosa Linn"
-    },
-    "2016": {
-      "song": "LoveWave",
-      "artist": "Iveta Mukuchyan"
-    },
-    "2014": {
-      "song": "Not Alone",
-      "artist": "Aram MP3"
-    },
-    "2008": {
-      "song": "Qele Qele",
-      "artist": "Sirusho"
-    }
+    "2006": {
+  "song": "Without Your Love",
+  "artist": "André"
+},
+"2007": {
+  "song": "Anytime You Need",
+  "artist": "Hayko"
+},
+"2008": {
+  "song": "Qélé, Qélé",
+  "artist": "Sirusho"
+},
+"2009": {
+  "song": "Jan Jan",
+  "artist": "Inga & Anush"
+},
+"2010": {
+  "song": "Apricot Stone",
+  "artist": "Eva Rivas"
+},
+"2011": {
+  "song": "Boom Boom",
+  "artist": "Emmy"
+},
+"2013": {
+  "song": "Lonely Planet",
+  "artist": "Dorians"
+},
+"2014": {
+  "song": "Not Alone",
+  "artist": "Aram MP3"
+},
+"2015": {
+  "song": "Face the Shadow",
+  "artist": "Genealogy"
+},
+"2016": {
+  "song": "LoveWave",
+  "artist": "Iveta Mukuchyan"
+},
+"2017": {
+  "song": "Fly with Me",
+  "artist": "Artsvik"
+},
+"2018": {
+  "song": "Qami",
+  "artist": "Sevak Khanagyan"
+},
+"2019": {
+  "song": "Walking Out",
+  "artist": "Srbuk"
+},
+"2020": {
+  "song": "Chains on You",
+  "artist": "Athena Manoukian"
+},
+"2022": {
+  "song": "Snap",
+  "artist": "Rosa Linn"
+},
+"2023": {
+  "song": "Future Lover",
+  "artist": "Brunette"
+},
+"2024": {
+  "song": "Jako",
+  "artist": "LADANIVA"
+},
+"2025": {
+  "song": "Survivor",
+  "artist": "PARG"
+},
+"2026": {
+  "song": "Paloma Rumba",
+  "artist": "SIMÓN"
+}
   },
   "Бельгия": {
-    "2024": {
-      "song": "Before the Party's Over",
-      "artist": "Mustii"
-    },
-    "2023": {
-      "song": "Because of You",
-      "artist": "Gustaph"
-    },
-    "2022": {
-      "song": "Miss You",
-      "artist": "Jérémie Makiese"
-    },
-    "2021": {
-      "song": "The Wrong Place",
-      "artist": "Hooverphonic"
-    },
-    "2015": {
-      "song": "Rhythm Inside",
-      "artist": "Loïc Nottet"
-    },
-    "1986": {
-      "song": "J'aime la vie",
-      "artist": "Sandra Kim"
-    }
+    "2000": {
+  "song": "Envie de vivre",
+  "artist": "Nathalie Sorce"
+},
+"2002": {
+  "song": "Sister",
+  "artist": "Sergio & The Ladies"
+},
+"2003": {
+  "song": "Sanomi",
+  "artist": "Urban Trad"
+},
+"2004": {
+  "song": "1 Life",
+  "artist": "Xandee"
+},
+"2005": {
+  "song": "Le Grand Soir",
+  "artist": "Nuno Resende"
+},
+"2006": {
+  "song": "Je t'adore",
+  "artist": "Kate Ryan"
+},
+"2007": {
+  "song": "LovePower",
+  "artist": "The KMG's"
+},
+"2008": {
+  "song": "O Julissi",
+  "artist": "Ishtar"
+},
+"2009": {
+  "song": "Copycat",
+  "artist": "Copycat"
+},
+"2010": {
+  "song": "Me and My Guitar",
+  "artist": "Tom Dice"
+},
+"2011": {
+  "song": "With Love Baby",
+  "artist": "Witloof Bay"
+},
+"2012": {
+  "song": "Would You?",
+  "artist": "Iris"
+},
+"2013": {
+  "song": "Love Kills",
+  "artist": "Roberto Bellarosa"
+},
+"2014": {
+  "song": "Mother",
+  "artist": "Axel Hirsoux"
+},
+"2015": {
+  "song": "Rhythm Inside",
+  "artist": "Loïc Nottet"
+},
+"2016": {
+  "song": "What's the Pressure",
+  "artist": "Laura Tesoro"
+},
+"2017": {
+  "song": "City Lights",
+  "artist": "Blanche"
+},
+"2018": {
+  "song": "A Matter of Time",
+  "artist": "Sennek"
+},
+"2019": {
+  "song": "Wake Up",
+  "artist": "Eliot"
+},
+"2020": {
+  "song": "Release Me",
+  "artist": "Hooverphonic"
+},
+"2021": {
+  "song": "The Wrong Place",
+  "artist": "Hooverphonic"
+},
+"2022": {
+  "song": "Miss You",
+  "artist": "Jérémie Makiese"
+},
+"2023": {
+  "song": "Because of You",
+  "artist": "Gustaph"
+},
+"2024": {
+  "song": "Before the Party's Over",
+  "artist": "Mustii"
+},
+"2025": {
+  "song": "Strobe Lights",
+  "artist": "Red Sebastian"
+},
+"2026": {
+  "song": "Dancing on the Ice",
+  "artist": "ESSYLA"
+}
   },
   "Болгария": {
-    "2026": {
-      "song": "Bangaranga",
-      "artist": "Dara"
-    },
-    "2022": {
-      "song": "Intention",
-      "artist": "Intelligent Music Project"
-    },
-    "2021": {
-      "song": "Growing Up Is Getting Old",
-      "artist": "VICTORIA"
-    },
-    "2017": {
-      "song": "Beautiful Mess",
-      "artist": "Kristian Kostov"
-    },
-    "2016": {
-      "song": "If Love Was a Crime",
-      "artist": "Poli Genova"
-    }
+    "2005": {
+  "song": "Lorraine",
+  "artist": "Kaffe"
+},
+"2006": {
+  "song": "Let Me Cry",
+  "artist": "Mariana Popova"
+},
+"2007": {
+  "song": "Water",
+  "artist": "Elitsa Todorova & Stoyan Yankoulov"
+},
+"2008": {
+  "song": "DJ, Take Me Away",
+  "artist": "Deep Zone & Balthazar"
+},
+"2009": {
+  "song": "Illusion",
+  "artist": "Krassimir Avramov"
+},
+"2010": {
+  "song": "Angel Si Ti",
+  "artist": "Miro"
+},
+"2011": {
+  "song": "Na Inat",
+  "artist": "Poli Genova"
+},
+"2012": {
+  "song": "Love Unlimited",
+  "artist": "Sofi Marinova"
+},
+"2013": {
+  "song": "Samo Shampioni",
+  "artist": "Elitsa Todorova & Stoyan Yankoulov"
+},
+"2016": {
+  "song": "If Love Was a Crime",
+  "artist": "Poli Genova"
+},
+"2017": {
+  "song": "Beautiful Mess",
+  "artist": "Kristian Kostov"
+},
+"2018": {
+  "song": "Bones",
+  "artist": "EQUINOX"
+},
+"2020": {
+  "song": "Tears Getting Sober",
+  "artist": "Victoria"
+},
+"2021": {
+  "song": "Growing Up Is Getting Old",
+  "artist": "Victoria"
+},
+"2022": {
+  "song": "Intention",
+  "artist": "Intelligent Music Project"
+},
+"2026": {
+  "song": "Bangaranga",
+  "artist": "DARA"
+}
   },
   "Великобритания": {
-    "2024": {
-      "song": "Dizzy",
-      "artist": "Olly Alexander"
-    },
-    "2023": {
-      "song": "I Wrote a Song",
-      "artist": "Mae Muller"
-    },
-    "2022": {
-      "song": "Space Man",
-      "artist": "Sam Ryder"
-    },
-    "2021": {
-      "song": "Embers",
-      "artist": "James Newman"
-    },
-    "2019": {
-      "song": "Bigger Than Us",
-      "artist": "Michael Rice"
-    },
-    "2018": {
-      "song": "Storm",
-      "artist": "SuRie"
-    },
-    "1997": {
-      "song": "Love Shine a Light",
-      "artist": "Katrina and the Waves"
-    },
-    "1981": {
-      "song": "Making Your Mind Up",
-      "artist": "Bucks Fizz"
-    },
-    "1976": {
-      "song": "Save Your Kisses for Me",
-      "artist": "Brotherhood of Man"
-    },
-    "1967": {
-      "song": "Puppet on a String",
-      "artist": "Sandie Shaw"
-    }
+    "2000": {
+  "song": "Don't Play That Song Again",
+  "artist": "Nicki French"
+},
+"2001": {
+  "song": "No Dream Impossible",
+  "artist": "Lindsay Dracass"
+},
+"2002": {
+  "song": "Come Back",
+  "artist": "Jessica Garlick"
+},
+"2003": {
+  "song": "Cry Baby",
+  "artist": "Jemini"
+},
+"2004": {
+  "song": "Hold On to Our Love",
+  "artist": "James Fox"
+},
+"2005": {
+  "song": "Touch My Fire",
+  "artist": "Javine"
+},
+"2006": {
+  "song": "Teenage Life",
+  "artist": "Daz Sampson"
+},
+"2007": {
+  "song": "Flying the Flag (For You)",
+  "artist": "Scooch"
+},
+"2008": {
+  "song": "Even If",
+  "artist": "Andy Abraham"
+},
+"2009": {
+  "song": "It's My Time",
+  "artist": "Jade Ewen"
+},
+"2010": {
+  "song": "That Sounds Good to Me",
+  "artist": "Josh Dubovie"
+},
+"2011": {
+  "song": "I Can",
+  "artist": "Blue"
+},
+"2012": {
+  "song": "Love Will Set You Free",
+  "artist": "Engelbert Humperdinck"
+},
+"2013": {
+  "song": "Believe in Me",
+  "artist": "Bonnie Tyler"
+},
+"2014": {
+  "song": "Children of the Universe",
+  "artist": "Molly"
+},
+"2015": {
+  "song": "Still in Love with You",
+  "artist": "Electro Velvet"
+},
+"2016": {
+  "song": "You're Not Alone",
+  "artist": "Joe & Jake"
+},
+"2017": {
+  "song": "Never Give Up on You",
+  "artist": "Lucie Jones"
+},
+"2018": {
+  "song": "Storm",
+  "artist": "SuRie"
+},
+"2019": {
+  "song": "Bigger Than Us",
+  "artist": "Michael Rice"
+},
+"2020": {
+  "song": "My Last Breath",
+  "artist": "James Newman"
+},
+"2021": {
+  "song": "Embers",
+  "artist": "James Newman"
+},
+"2022": {
+  "song": "SPACE MAN",
+  "artist": "Sam Ryder"
+},
+"2023": {
+  "song": "I Wrote a Song",
+  "artist": "Mae Muller"
+},
+"2024": {
+  "song": "Dizzy",
+  "artist": "Olly Alexander"
+},
+"2025": {
+  "song": "What The Hell Just Happened?",
+  "artist": "Remember Monday"
+},
+"2026": {
+  "song": "Eins, Zwei, Drei",
+  "artist": "LOOK MUM NO COMPUTER"
+}
   },
   "Германия": {
-    "2024": {
-      "song": "Always on the Run",
-      "artist": "Isaak"
-    },
-    "2023": {
-      "song": "Blood & Glitter",
-      "artist": "Lord of the Lost"
-    },
-    "2022": {
-      "song": "Rockstars",
-      "artist": "Malik Harris"
-    },
-    "2021": {
-      "song": "I Don't Feel Hate",
-      "artist": "Jendrik"
-    },
-    "2019": {
-      "song": "Sister",
-      "artist": "S!sters"
-    },
-    "2018": {
-      "song": "You Let Me Walk Alone",
-      "artist": "Michael Schulte"
-    },
-    "2017": {
-      "song": "Perfect Life",
-      "artist": "Levina"
-    },
-    "2016": {
-      "song": "Ghost",
-      "artist": "Jamie-Lee"
-    },
-    "2015": {
-      "song": "Black Smoke",
-      "artist": "Ann Sophie"
-    },
-    "2014": {
-      "song": "Is It Right",
-      "artist": "Elaiza"
-    },
-    "2013": {
-      "song": "Glorious",
-      "artist": "Cascada"
-    },
-    "2012": {
-      "song": "Standing Still",
-      "artist": "Roman Lob"
-    },
-    "2011": {
-      "song": "Taken by a Stranger",
-      "artist": "Lena"
-    },
-    "2010": {
-      "song": "Satellite",
-      "artist": "Lena"
-    },
-    "2009": {
-      "song": "Miss Kiss Kiss Bang",
-      "artist": "Alex Swings Oscar Sings!"
-    },
-    "2008": {
-      "song": "Disappear",
-      "artist": "No Angels"
-    },
-    "1982": {
-      "song": "Ein bißchen Frieden",
-      "artist": "Nicole"
-    }
+   "2000": {
+  "song": "Wadde hadde dudde da?",
+  "artist": "Stefan Raab"
+},
+"2001": {
+  "song": "Wer Liebe lebt",
+  "artist": "Michelle"
+},
+"2002": {
+  "song": "I Can't Live Without Music",
+  "artist": "Corinna May"
+},
+"2003": {
+  "song": "Let's Get Happy",
+  "artist": "Lou"
+},
+"2004": {
+  "song": "Can't Wait Until Tonight",
+  "artist": "Max Mutzke"
+},
+"2005": {
+  "song": "Run & Hide",
+  "artist": "Gracia"
+},
+"2006": {
+  "song": "No No Never",
+  "artist": "Texas Lightning"
+},
+"2007": {
+  "song": "Frauen regier'n die Welt",
+  "artist": "Roger Cicero"
+},
+"2008": {
+  "song": "Disappear",
+  "artist": "No Angels"
+},
+"2009": {
+  "song": "Miss Kiss Kiss Bang",
+  "artist": "Alex Swings Oscar Sings!"
+},
+"2010": {
+  "song": "Satellite",
+  "artist": "Lena"
+},
+"2011": {
+  "song": "Taken by a Stranger",
+  "artist": "Lena"
+},
+"2012": {
+  "song": "Standing Still",
+  "artist": "Roman Lob"
+},
+"2013": {
+  "song": "Glorious",
+  "artist": "Cascada"
+},
+"2014": {
+  "song": "Is It Right",
+  "artist": "Elaiza"
+},
+"2015": {
+  "song": "Black Smoke",
+  "artist": "Ann Sophie"
+},
+"2016": {
+  "song": "Ghost",
+  "artist": "Jamie-Lee"
+},
+"2017": {
+  "song": "Perfect Life",
+  "artist": "Levina"
+},
+"2018": {
+  "song": "You Let Me Walk Alone",
+  "artist": "Michael Schulte"
+},
+"2019": {
+  "song": "Sister",
+  "artist": "S!sters"
+},
+"2020": {
+  "song": "Violent Thing",
+  "artist": "Ben Dolic"
+},
+"2021": {
+  "song": "I Don't Feel Hate",
+  "artist": "Jendrik"
+},
+"2022": {
+  "song": "Rockstars",
+  "artist": "Malik Harris"
+},
+"2023": {
+  "song": "Blood & Glitter",
+  "artist": "Lord of the Lost"
+},
+"2024": {
+  "song": "Always on the Run",
+  "artist": "Isaak"
+},
+"2025": {
+  "song": "Baller",
+  "artist": "Abor & Tynna"
+},
+"2026": {
+  "song": "Fire",
+  "artist": "Nina Chuba"
+}
   },
   "Греция": {
-    "2024": {
-      "song": "Zari",
-      "artist": "Marina Satti"
-    },
-    "2023": {
-      "song": "What They Say",
-      "artist": "Victor Vernicos"
-    },
-    "2022": {
-      "song": "Die Together",
-      "artist": "Amanda Georgiadi Tenfjord"
-    },
-    "2021": {
-      "song": "Last Dance",
-      "artist": "Stefania"
-    },
-    "2019": {
-      "song": "Better Love",
-      "artist": "Katerine Duska"
-    },
-    "2005": {
-      "song": "My Number One",
-      "artist": "Helena Paparizou"
-    }
+    "2001": {
+  "song": "Die for You",
+  "artist": "Antique"
+},
+"2002": {
+  "song": "S.A.G.A.P.O.",
+  "artist": "Michalis Rakintzis"
+},
+"2003": {
+  "song": "Never Let You Go",
+  "artist": "Mando"
+},
+"2004": {
+  "song": "Shake It",
+  "artist": "Sakis Rouvas"
+},
+"2005": {
+  "song": "My Number One",
+  "artist": "Helena Paparizou"
+},
+"2006": {
+  "song": "Everything",
+  "artist": "Anna Vissi"
+},
+"2007": {
+  "song": "Yassou Maria",
+  "artist": "Sarbel"
+},
+"2008": {
+  "song": "Secret Combination",
+  "artist": "Kalomira"
+},
+"2009": {
+  "song": "This Is Our Night",
+  "artist": "Sakis Rouvas"
+},
+"2010": {
+  "song": "OPA",
+  "artist": "Giorgos Alkaios & Friends"
+},
+"2011": {
+  "song": "Watch My Dance",
+  "artist": "Loukas Yiorkas feat. Stereo Mike"
+},
+"2012": {
+  "song": "Aphrodisiac",
+  "artist": "Eleftheria Eleftheriou"
+},
+"2013": {
+  "song": "Alcohol Is Free",
+  "artist": "Koza Mostra feat. Agathonas Iakovidis"
+},
+"2014": {
+  "song": "Rise Up",
+  "artist": "Freaky Fortune feat. RiskyKidd"
+},
+"2015": {
+  "song": "One Last Breath",
+  "artist": "Maria Elena Kyriakou"
+},
+"2016": {
+  "song": "Utopian Land",
+  "artist": "Argo"
+},
+"2017": {
+  "song": "This Is Love",
+  "artist": "Demy"
+},
+"2018": {
+  "song": "Oneiro Mou",
+  "artist": "Yianna Terzi"
+},
+"2019": {
+  "song": "Better Love",
+  "artist": "Katerine Duska"
+},
+"2020": {
+  "song": "SUPERG!RL",
+  "artist": "Stefania"
+},
+"2021": {
+  "song": "Last Dance",
+  "artist": "Stefania"
+},
+"2022": {
+  "song": "Die Together",
+  "artist": "Amanda Georgiadi Tenfjord"
+},
+"2023": {
+  "song": "What They Say",
+  "artist": "Victor Vernicos"
+},
+"2024": {
+  "song": "Zari",
+  "artist": "Marina Satti"
+},
+"2025": {
+  "song": "Asteromáta",
+  "artist": "Klavdia"
+},
+  "2026": {
+  "song": "Ferto",
+  "artist": "Akylas"
+}
   },
   "Грузия": {
-    "2024": {
-      "song": "Firefighter",
-      "artist": "Nutsa Buzaladze"
-    },
-    "2023": {
-      "song": "Echo",
-      "artist": "Iru"
-    },
-    "2022": {
-      "song": "Lock Me In",
-      "artist": "Circus Mircus"
-    },
-    "2021": {
-      "song": "You",
-      "artist": "Tornike Kipiani"
-    },
-    "2015": {
-      "song": "Warrior",
-      "artist": "Nina Sublatti"
-    }
+   "2007": {
+  "song": "My Story",
+  "artist": "Sopho"
+},
+"2008": {
+  "song": "Peace Will Come",
+  "artist": "Diana Gurtskaya"
+},
+"2009": {
+  "song": "We Don't Wanna Put In",
+  "artist": "Stephane & 3G"
+},
+"2010": {
+  "song": "Shine",
+  "artist": "Sofia Nizharadze"
+},
+"2011": {
+  "song": "One More Day",
+  "artist": "Eldrine"
+},
+"2012": {
+  "song": "I'm a Joker",
+  "artist": "Anri Jokhadze"
+},
+"2013": {
+  "song": "Waterfall",
+  "artist": "Nodi Tatishvili & Sophie Gelovani"
+},
+"2014": {
+  "song": "Three Minutes to Earth",
+  "artist": "The Shin & Mariko"
+},
+"2015": {
+  "song": "Warrior",
+  "artist": "Nina Sublatti"
+},
+"2016": {
+  "song": "Midnight Gold",
+  "artist": "Nika Kocharov & Young Georgian Lolitaz"
+},
+"2017": {
+  "song": "Keep the Faith",
+  "artist": "Tamara Gachechiladze"
+},
+"2018": {
+  "song": "For You",
+  "artist": "Iriao"
+},
+"2019": {
+  "song": "Keep the Faith",
+  "artist": "Oto Nemsadze"
+},
+"2020": {
+  "song": "Take Me As I Am",
+  "artist": "Tornike Kipiani"
+},
+"2022": {
+  "song": "Lock Me In",
+  "artist": "Circus Mircus"
+},
+"2023": {
+  "song": "Echo",
+  "artist": "Iru"
+},
+"2024": {
+  "song": "Firefighter",
+  "artist": "Nutsa Buzaladze"
+},
+"2025": {
+  "song": "Freedom",
+  "artist": "Mariam Shengelia"
+},
+"2026": {
+  "song": "On Replay",
+  "artist": "Bzikebi"
+}
   },
   "Дания": {
     "2024": {
