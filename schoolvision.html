@@ -211,6 +211,35 @@
     margin-right: auto;
   }
 
+  /* Таймер обратного отсчета */
+  #countdownBox {
+    margin-top: 25px;
+    display: none;
+    justify-content: center;
+    gap: 15px;
+  }
+  .countdown-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-glow);
+    padding: 10px 15px;
+    border-radius: 12px;
+    min-width: 70px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+  .countdown-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+  }
+  .countdown-lbl {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 2px;
+    letter-spacing: 0.05em;
+  }
+
   .hero-action-box {
     margin-top: 28px;
     display: none;
@@ -607,6 +636,22 @@
     <div class="hero-slogan script-font">United by Music</div>
     <p class="hero-sub" id="heroSubtitle">Школьный музыкальный конкурс в стиле большого европейского шоу.</p>
     
+    <!-- Таймер обратного отсчета -->
+    <div id="countdownBox">
+      <div class="countdown-card">
+        <div id="cdDays" class="countdown-num" style="color:var(--neon-cyan);">00</div>
+        <div class="countdown-lbl">Дней</div>
+      </div>
+      <div class="countdown-card">
+        <div id="cdHours" class="countdown-num" style="color:var(--neon-magenta);">00</div>
+        <div class="countdown-lbl">Часов</div>
+      </div>
+      <div class="countdown-card">
+        <div id="cdMins" class="countdown-num" style="color:var(--neon-gold);">00</div>
+        <div class="countdown-lbl">Минут</div>
+      </div>
+    </div>
+
     <div id="globalTestBadge" class="test-indicator-badge">
       ⚙️ Включен тестовый режим (Песочница репетиций)
     </div>
@@ -696,11 +741,11 @@
   </div>
 
   <div class="form-card" style="margin-top: 30px;">
-    <h3 style="margin-bottom:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;">Общий реестр поданных анкет</h3>
+    <h3 style="margin-bottom:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;">Общий реестр поданных анкет (Плейлист репетиций)</h3>
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Класс</th><th>Страна</th><th>Год</th><th>Песня / Исполнитель</th><th>Статус</th></tr>
+          <tr><th>№</th><th>Класс</th><th>Страна</th><th>Год</th><th>Песня / Исполнитель</th><th>Аудио трек</th><th>Статус</th></tr>
         </thead>
         <tbody id="publicApplicationsBody"></tbody>
       </table>
@@ -763,6 +808,9 @@
   </div>
 </footer>
 
+<!-- Аудиоплеер для плейлиста репетиций -->
+<audio id="previewPlayer" preload="auto"></audio>
+
 <!-- ADMIN LOGIN MODAL -->
 <div class="modal-overlay" id="adminLoginOverlay">
   <div class="modal-box" style="max-width:380px;">
@@ -793,11 +841,12 @@
           <input type="checkbox" id="adminSystemModeCheckbox">
           <label style="margin: 0; font-weight: 700; color: #fff; cursor: pointer;">Включить ТЕСТОВЫЙ режим (Данные заявок изолируются)</label>
         </div>
-        <p class="small-note" style="color: var(--text-dim); margin-top: 4px;">При включении все заявки с сайта будут записываться in отдельный тестовый список, не смешиваясь с реальным концертом.</p>
+        <p class="small-note" style="color: var(--text-dim); margin-top: 4px;">При включении все заявки с сайта будут записываться в отдельный тестовый список, не смешиваясь с реальным концертом.</p>
       </div>
 
       <div class="form-grid">
         <div><label>Дата</label><input type="text" id="adminDate" placeholder="Например, 25 апреля 2026"></div>
+        <div><label>Точное время и дата (для таймера)</label><input type="datetime-local" id="adminEventTimestamp"></div>
         <div><label>Место</label><input type="text" id="adminPlace" placeholder="Например, Актовый зал"></div>
         <div><label>Дедлайн заявок</label><input type="text" id="adminDeadline" placeholder="Например, 10 апреля 2026"></div>
         <div><label>E-mail</label><input type="text" id="adminEmail" placeholder="org@school.ru"></div>
@@ -814,6 +863,9 @@
         <input type="checkbox" id="adminVotingOpen">
         <label style="margin:0;">Голосование открыто</label>
       </div>
+
+      <!-- Кнопка экспорта итогов -->
+      <button class="btn" id="exportResultsBtn" style="margin-bottom: 20px; background: linear-gradient(90deg, #26e5ff, #1c5cff); width: 100%;">📥 Экспортировать сводный протокол (.txt)</button>
 
       <h4 style="margin-bottom:10px;">Пункты правил</h4>
       <div id="adminRulesList"></div>
@@ -836,7 +888,10 @@
     </div>
 
     <div class="admin-panel" id="tab-applications">
-      <button class="btn danger-btn btn-small" id="clearUnapprovedBtn" style="margin-bottom:16px;">🗑️ Очистить неодобренные заявки</button>
+      <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+        <button class="btn btn-small danger-btn" id="clearUnapprovedBtn">🗑️ Очистить неодобренные</button>
+        <button class="btn btn-small btn-primary" id="randomizeOrderBtn">🎲 Провести жеребьевку</button>
+      </div>
       <div id="adminApplicationsList"></div>
     </div>
 
@@ -849,7 +904,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
-
   var firebaseConfig = {
     apiKey: "AIzaSyAmoYfyEXAC-mZo8BpWRFmqH914X9KYCw0",
     authDomain: "schoolvision-2027.firebaseapp.com",
@@ -913,14 +967,16 @@
   ];
 
   var contentData = {
-    date: "", place: "", deadline: "", email: "", subtitle: "",
+    date: "", eventTimestamp: "", place: "", deadline: "", email: "", subtitle: "",
     rules: [], votingLink: "", votingOpen: false, systemMode: "live"
   };
   
   var applicationsData = [];
   var questionsData = [];
+  var countrySongsMap = {};
   var isAdmin = false;
-  var songsDatabase = {}; // Здесь будет храниться локальный JSON-архив
+  var songsDatabase = {}; 
+  var countdownInterval = null;
 
   function populateCountrySelect() {
     var el = document.getElementById("appCountry");
@@ -934,13 +990,11 @@
 
   populateCountrySelect();
 
-  // Загружаем наш локальный JSON-архив при старте страницы
   fetch("eurovision-db.json")
     .then(function(res) { return res.json(); })
     .then(function(data) { songsDatabase = data; })
     .catch(function(err) { console.error("Не удалось загрузить локальный файл eurovision-db.json: ", err); });
 
-  // Заполнение годов СТРОГО на основе прописанных в JSON-файле для этой страны
   document.getElementById("appCountry").addEventListener("change", function() {
     var countryName = this.value;
     var yearEl = document.getElementById("appYear");
@@ -953,7 +1007,6 @@
     document.getElementById("appSong").placeholder = "Выберите год для автозаполнения";
     document.getElementById("appArtist").placeholder = "Выберите год для автозаполнения";
 
-    // Ищем доступные года в нашей точной JSON-базе
     if (songsDatabase[countryName]) {
       var years = Object.keys(songsDatabase[countryName]).sort(function(a, b) { return b - a; });
       for (var i = 0; i < years.length; i++) {
@@ -962,7 +1015,6 @@
         yearEl.appendChild(opt);
       }
     } else {
-      // Если страны еще нет в JSON-файле, выведем резервный список, но откроем ручной ввод
       for (var y = 2026; y >= 1956; y--) {
         var opt = document.createElement("option");
         opt.value = y; opt.textContent = y;
@@ -972,7 +1024,6 @@
     checkDuplicate();
   });
 
-  // 100% ТОЧНОЕ ЗАПОЛНЕНИЕ ИЗ СОБСТВЕННОГО JSON-ФАЙЛА
   document.getElementById("appYear").addEventListener("change", function() {
     var country = document.getElementById("appCountry").value;
     var year = this.value;
@@ -988,7 +1039,6 @@
       songInput.readOnly = true;
       artistInput.readOnly = true;
     } else {
-      // Бэкап: если связки нет в JSON, разрешаем судьям/ученикам вписать трек руками
       songInput.value = "";
       artistInput.value = "";
       songInput.placeholder = "Комбинация не найдена в JSON. Введите вручную...";
@@ -996,9 +1046,44 @@
       songInput.readOnly = false;
       artistInput.readOnly = false;
     }
-    
     checkDuplicate();
   });
+
+  function startCountdown(targetDateString) {
+    if (countdownInterval) clearInterval(countdownInterval);
+    var targetTime = new Date(targetDateString).getTime();
+    
+    if (isNaN(targetTime)) {
+      document.getElementById("countdownBox").style.display = "none";
+      return;
+    }
+    
+    document.getElementById("countdownBox").style.display = "flex";
+
+    function updateTimer() {
+      var now = new Date().getTime();
+      var diff = targetTime - now;
+
+      if (diff <= 0) {
+        document.getElementById("cdDays").textContent = "00";
+        document.getElementById("cdHours").textContent = "00";
+        document.getElementById("cdMins").textContent = "00";
+        clearInterval(countdownInterval);
+        return;
+      }
+
+      var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      document.getElementById("cdDays").textContent = String(days).padStart(2, '0');
+      document.getElementById("cdHours").textContent = String(hours).padStart(2, '0');
+      document.getElementById("cdMins").textContent = String(mins).padStart(2, '0');
+    }
+
+    updateTimer();
+    countdownInterval = setInterval(updateTimer, 1000);
+  }
 
   function renderContent() {
     document.getElementById("infoDate").textContent = contentData.date || "Скоро объявим";
@@ -1010,6 +1095,12 @@
     var mailtoBtn = document.getElementById("mailtoBtn");
     mailtoBtn.setAttribute("href", contentData.email ? "mailto:" + contentData.email : "#questions");
     document.getElementById("heroSubtitle").textContent = contentData.subtitle || "Школьный музыкальный конкурс в стиле большого европейского шоу.";
+
+    if (contentData.eventTimestamp) {
+      startCountdown(contentData.eventTimestamp);
+    } else {
+      document.getElementById("countdownBox").style.display = "none";
+    }
 
     var heroVoteBox = document.getElementById("heroVoteBox");
     if (contentData.votingOpen && contentData.votingLink) {
@@ -1086,18 +1177,30 @@
     var monitorHtml = "";
 
     if (applicationsData.length === 0) {
-      tableHtml = '<tr><td colspan="5" style="color:var(--text-dim); text-align: center;">Заявок пока нет</td></tr>';
+      tableHtml = '<tr><td colspan="7" style="color:var(--text-dim); text-align: center;">Заявок пока нет</td></tr>';
       monitorHtml = '<li style="color:var(--text-dim); font-style:italic; font-size:13px; text-align:center; padding:20px 0;">Все страны пока свободны!</li>';
     } else {
-      for (var i = 0; i < applicationsData.length; i++) {
-        var a = applicationsData[i];
+      // Сортируем для таблицы по номеру жеребьевки (если она была)
+      var sortedApps = applicationsData.slice().sort(function(a, b) {
+        var ordA = a.stageOrder !== undefined ? a.stageOrder : 999;
+        var ordB = b.stageOrder !== undefined ? b.stageOrder : 999;
+        return ordA - ordB;
+      });
+
+      for (var i = 0; i < sortedApps.length; i++) {
+        var a = sortedApps[i];
         var flag = getCountryFlag(a.country);
+        var audioUrl = countrySongsMap[a.country] || "";
+        var playBtnHtml = audioUrl ? '<button class="btn btn-small" onclick="playPreview(\'' + audioUrl + '\')">▶ Слушать</button>' : '<span style="color:var(--text-dim);font-size:11px;">Нет трека</span>';
+        var orderBadge = a.stageOrder ? '<b>№' + a.stageOrder + '</b>' : '—';
 
         tableHtml += '<tr>' +
+          '<td>' + orderBadge + '</td>' +
           '<td>' + escapeHtml(a.className) + '</td>' +
           '<td>' + flag + ' ' + escapeHtml(a.country) + '</td>' +
           '<td>' + escapeHtml(a.year) + '</td>' +
           '<td>' + escapeHtml(a.artist) + ' — «' + escapeHtml(a.song) + '»</td>' +
+          '<td>' + playBtnHtml + '</td>' +
           '<td>' + statusLabel(a.status) + '</td>' +
         '</tr>';
 
@@ -1115,13 +1218,32 @@
     monitorList.innerHTML = monitorHtml;
   }
 
+  window.playPreview = function(url) {
+    var player = document.getElementById("previewPlayer");
+    if (player.src === url && !player.paused) {
+      player.pause();
+    } else {
+      player.src = url;
+      player.play().catch(function(e) { console.log("Плейлист заблокирован браузером", e); });
+    }
+  };
+
   var contentDocRef = db.collection("schoolvision").doc("site:content");
+  var songsConfigRef = db.collection("schoolvision").doc("config:country_songs");
   var unsubApps = null;
+
+  songsConfigRef.onSnapshot(function(snap) {
+    if (snap.exists) {
+      countrySongsMap = snap.data().songs || {};
+      renderPublicApplications();
+    }
+  });
 
   contentDocRef.onSnapshot(function (snap) {
     if (snap.exists) {
       var data = snap.data();
       contentData.date = data.date || "";
+      contentData.eventTimestamp = data.eventTimestamp || "";
       contentData.place = data.place || "";
       contentData.deadline = data.deadline || "";
       contentData.email = data.email || "";
@@ -1309,13 +1431,13 @@
 
   function renderAdminContentFields() {
     document.getElementById("adminDate").value = contentData.date || "";
+    document.getElementById("adminEventTimestamp").value = contentData.eventTimestamp || "";
     document.getElementById("adminPlace").value = contentData.place || "";
     document.getElementById("adminDeadline").value = contentData.deadline || "";
     document.getElementById("adminEmail").value = contentData.email || "";
     document.getElementById("adminSubtitle").value = contentData.subtitle || "";
     document.getElementById("adminVotingLink").value = contentData.votingLink || "";
     document.getElementById("adminVotingOpen").checked = !!contentData.votingOpen;
-    
     document.getElementById("adminSystemModeCheckbox").checked = contentData.systemMode === "test";
 
     var listEl = document.getElementById("adminRulesList");
@@ -1364,6 +1486,7 @@
     
     var updated = {
       date: document.getElementById("adminDate").value.trim(),
+      eventTimestamp: document.getElementById("adminEventTimestamp").value,
       place: document.getElementById("adminPlace").value.trim(),
       deadline: document.getElementById("adminDeadline").value.trim(),
       email: document.getElementById("adminEmail").value.trim(),
@@ -1380,6 +1503,63 @@
       btn.textContent = "Сохранено ✓";
       setTimeout(function () { btn.textContent = original; }, 1600);
     }).catch(function (err) { console.error(err); });
+  });
+
+  // Логика проведения жеребьевки
+  document.getElementById("randomizeOrderBtn").addEventListener("click", function() {
+    var activePath = contentData.systemMode === "test" ? "applications:test_list" : "applications:list";
+    var approvedApps = applicationsData.filter(function(a) { return a.status === "approved"; });
+    if (approvedApps.length === 0) {
+      alert("Нет одобренных заявок для жеребьевки!");
+      return;
+    }
+
+    if (!confirm("Провести случайную жеребьевку порядковых номеров для " + approvedApps.length + " участников?")) return;
+
+    var shuffled = approvedApps.slice();
+    for (var i = shuffled.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = shuffled[i];
+      shuffled[i] = shuffled[j];
+      shuffled[j] = temp;
+    }
+
+    var orderMap = {};
+    shuffled.forEach(function(item, index) {
+      orderMap[item.id] = index + 1;
+    });
+
+    var updatedItems = applicationsData.map(function(a) {
+      if (orderMap[a.id] !== undefined) {
+        a.stageOrder = orderMap[a.id];
+      } else {
+        delete a.stageOrder;
+      }
+      return a;
+    });
+
+    db.collection("schoolvision").doc(activePath).set({ items: updatedItems }, { merge: true }).then(function() {
+      alert("Жеребьевка успешно проведена!");
+    }).catch(function(err) { console.error(err); });
+  });
+
+  // Логика экспорта результатов в текстовый файл
+  document.getElementById("exportResultsBtn").addEventListener("click", function() {
+    var reportText = "=== ОФИЦИАЛЬНЫЙ ПРОТОКОЛ SCHOOLVISION ===\n\n";
+    if (applicationsData.length === 0) {
+      reportText += "Список заявок пуст.\n";
+    } else {
+      applicationsData.forEach(function(a, idx) {
+        reportText += (idx + 1) + ". Класс: " + a.className + " | Страна: " + a.country + " (" + a.year + ") | Трек: " + a.artist + " - " + a.song + " | Статус: " + a.status + "\n";
+      });
+    }
+    reportText += "\nКонкурс SCHOOLVISION — United by Music";
+
+    var blob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
+    var link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Schoolvision_Protocol_2026.txt";
+    link.click();
   });
 
   function renderAdminApplications() {
