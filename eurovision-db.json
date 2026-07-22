@@ -1102,70 +1102,70 @@
     }
   },
   "Италия": {
-    "2024": {
-      "song": "La noia",
-      "artist": "Angelina Mango"
-    },
-    "2023": {
-      "song": "Due vite",
-      "artist": "Marco Mengoni"
-    },
-    "2022": {
-      "song": "Brividi",
-      "artist": "Mahmood & Blanco"
-    },
-    "2021": {
-      "song": "Zitti e buoni",
-      "artist": "Måneskin"
-    },
-    "2020": {
-      "song": "Fai rumore",
-      "artist": "Diodato"
-    },
-    "2019": {
-      "song": "Soldi",
-      "artist": "Mahmood"
-    },
-    "2018": {
-      "song": "Non mi avete fatto niente",
-      "artist": "Ermal Meta & Fabrizio Moro"
-    },
-    "2017": {
-      "song": "Occidentali's Karma",
-      "artist": "Francesco Gabbani"
-    },
-    "2016": {
-      "song": "No Degree of Separation",
-      "artist": "Francesca Michielin"
-    },
-    "2015": {
-      "song": "Grande amore",
-      "artist": "Il Volo"
-    },
-    "2014": {
-      "song": "La mia città",
-      "artist": "Emma"
-    },
-    "2013": {
-      "song": "L'essenziale",
-      "artist": "Marco Mengoni"
-    },
-    "2012": {
-      "song": "L'amore è femmina",
-      "artist": "Nina Zilli"
-    },
     "2011": {
-      "song": "Madness of Love",
-      "artist": "Raphael Gualazzi"
-    },
-    "1990": {
-      "song": "Insieme: 1992",
-      "artist": "Toto Cutugno"
-    },
-    "1964": {
-      "song": "Non ho l'età",
-      "artist": "Gigliola Cinquetti"
-    }
+  "song": "Madness of Love",
+  "artist": "Raphael Gualazzi"
+},
+"2012": {
+  "song": "L'Amore È Femmina (Out of Love)",
+  "artist": "Nina Zilli"
+},
+"2013": {
+  "song": "L'Essenziale",
+  "artist": "Marco Mengoni"
+},
+"2014": {
+  "song": "La mia città",
+  "artist": "Emma"
+},
+"2015": {
+  "song": "Grande Amore",
+  "artist": "Il Volo"
+},
+"2016": {
+  "song": "No Degree of Separation",
+  "artist": "Francesca Michielin"
+},
+"2017": {
+  "song": "Occidentali's Karma",
+  "artist": "Francesco Gabbani"
+},
+"2018": {
+  "song": "Non mi avete fatto niente",
+  "artist": "Ermal Meta e Fabrizio Moro"
+},
+"2019": {
+  "song": "Soldi",
+  "artist": "Mahmood"
+},
+"2020": {
+  "song": "Fai Rumore",
+  "artist": "Diodato"
+},
+"2021": {
+  "song": "Zitti e buoni",
+  "artist": "Måneskin"
+},
+"2022": {
+  "song": "Brividi",
+  "artist": "Mahmood & BLANCO"
+},
+"2023": {
+  "song": "Due vite",
+  "artist": "Marco Mengoni"
+},
+"2024": {
+  "song": "La noia",
+  "artist": "Angelina Mango"
+},
+"2025": {
+  "song": "Volevo essere un duro",
+  "artist": "Lucio Corsi"
+},
+"2026": {
+  "song": "Per Sempre Sì",
+  "artist": "Sal Da Vinci"
+}
   },
   "Кипр": {
     "2024": {
