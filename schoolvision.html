@@ -11,19 +11,23 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg-deep: #0a0620;
-    --bg-deep2: #140b30;
-    --bg-panel: rgba(255,255,255,0.045);
-    --border-glow: rgba(255,255,255,0.10);
+    --bg-deep: #050214;
+    --bg-deep2: #09041d;
+    --bg-panel: rgba(255,255,255,0.035);
+    --border-glow: rgba(255,255,255,0.08);
     --neon-magenta: #ff2ec4;
     --neon-cyan: #26e5ff;
     --neon-gold: #ffd166;
-    --text-light: #f4f0ff;
-    --text-dim: #b9aed6;
+    --text-light: #f8f6fc;
+    --text-dim: #9d92be;
   }
 
   html, body {
-    background: radial-gradient(ellipse at 20% -10%, #2a0e52 0%, var(--bg-deep) 55%), var(--bg-deep);
+    background-color: var(--bg-deep);
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(255, 46, 196, 0.25) 0%, transparent 35%),
+      radial-gradient(circle at 90% 20%, rgba(38, 229, 255, 0.2) 0%, transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
     color: var(--text-light);
     font-family: 'Manrope', sans-serif;
     min-height: 100%;
@@ -53,7 +57,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 32px;
-    background: rgba(10, 6, 32, 0.72);
+    background: rgba(5, 2, 20, 0.82);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border-glow);
     flex-wrap: wrap;
@@ -64,11 +68,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 20px;
   }
 
   .logo-mark img {
-    max-height: 40px;
+    max-height: 38px;
     width: auto;
     object-fit: contain;
     display: block;
@@ -78,7 +81,7 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 800;
     letter-spacing: -0.01em;
-    font-size: 19px;
+    font-size: 18px;
     background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-magenta) 55%, var(--neon-gold) 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -149,7 +152,7 @@
   /* ---------- HERO ---------- */
   .hero {
     position: relative;
-    padding: 90px 24px 60px;
+    padding: 80px 24px 50px;
     text-align: center;
     overflow: hidden;
   }
@@ -159,9 +162,9 @@
     position: absolute;
     inset: -20%;
     background:
-      radial-gradient(circle at 15% 20%, rgba(255,46,196,0.28), transparent 40%),
-      radial-gradient(circle at 85% 15%, rgba(38,229,255,0.25), transparent 40%),
-      radial-gradient(circle at 50% 90%, rgba(255,209,102,0.14), transparent 45%);
+      radial-gradient(circle at 15% 20%, rgba(255,46,196,0.25), transparent 40%),
+      radial-gradient(circle at 85% 15%, rgba(38,229,255,0.22), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(255,209,102,0.12), transparent 45%);
     pointer-events: none;
     z-index: 0;
   }
@@ -172,7 +175,7 @@
     position: relative;
     width: 150px;
     height: 128px;
-    margin: 0 auto 20px;
+    margin: 0 auto 10px;
   }
 
   .hero-svg { width: 100%; height: 100%; display: block; }
@@ -182,31 +185,41 @@
     left: 50%;
     top: 56%;
     transform: translate(-50%, -50%);
-    margin-top: 0;
   }
 
+  /* Новый стильный заголовок SCHOOLVISION */
   .hero-title {
-    font-size: clamp(46px, 9vw, 92px);
-    line-height: 0.95;
+    font-size: clamp(38px, 8vw, 78px);
+    line-height: 1.05;
     background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-magenta) 55%, var(--neon-gold) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 22px rgba(255,46,196,0.35));
+    filter: drop-shadow(0 0 25px rgba(255,46,196,0.35));
+    letter-spacing: -0.03em;
   }
 
   .hero-slogan {
     font-family: 'Caveat', cursive;
-    font-size: 34px;
+    font-size: 30px;
     color: var(--neon-gold);
-    margin-top: 6px;
+    margin-top: 4px;
+  }
+
+  .school-contest-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    margin-top: 10px;
+    font-weight: 700;
   }
 
   .hero-sub {
-    margin-top: 18px;
+    margin-top: 14px;
     color: var(--text-dim);
-    font-size: 16px;
-    max-width: 560px;
+    font-size: 15px;
+    max-width: 520px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -241,21 +254,17 @@
   }
 
   .hero-action-box {
-    margin-top: 28px;
+    margin-top: 25px;
     display: none;
     padding: 0 16px;
   }
 
   .hero-action-box .btn-hero-vote {
     padding: 14px 32px;
-    font-size: 16px;
+    font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border-radius: 999px;
-    max-width: 100%;
-    width: auto;
-    white-space: normal;
-    line-height: 1.3;
   }
 
   .test-indicator-badge {
@@ -271,7 +280,6 @@
     margin: 15px auto 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    box-shadow: 0 0 15px rgba(255,209,102,0.1);
   }
 
   /* equalizer */
@@ -279,12 +287,11 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    gap: 6px;
-    height: 40px;
-    margin-top: 26px;
+    gap: 5px;
+    height: 35px;
   }
   .equalizer .bar {
-    width: 6px;
+    width: 5px;
     border-radius: 4px;
     background: linear-gradient(180deg, var(--neon-cyan), var(--neon-magenta));
     animation: bounce 1.1s ease-in-out infinite;
@@ -294,19 +301,17 @@
   .equalizer .bar:nth-child(3) { animation-delay: .24s; }
   .equalizer .bar:nth-child(4) { animation-delay: .36s; }
   .equalizer .bar:nth-child(5) { animation-delay: .48s; }
-  .equalizer .bar:nth-child(6) { animation-delay: .6s; }
-  .equalizer .bar:nth-child(7) { animation-delay: .72s; }
 
   @keyframes bounce {
-    0%, 100% { height: 8px; }
-    50% { height: 38px; }
+    0%, 100% { height: 6px; }
+    50% { height: 32px; }
   }
 
   /* ---------- INFO PLATES ---------- */
   .info-grid {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 20px 24px 60px;
+    padding: 10px 24px 50px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 18px;
@@ -331,7 +336,7 @@
     font-size: 21px;
   }
 
-  /* ---------- SECTIONS В ДВА СТОЛБЦА ---------- */
+  /* ---------- SECTIONS ---------- */
   .apply-layout {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
@@ -346,13 +351,13 @@
   section {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 60px 24px;
+    padding: 50px 24px;
   }
   .section-title {
-    font-size: clamp(30px, 5vw, 46px);
-    margin-bottom: 30px;
+    font-size: clamp(28px, 4vw, 40px);
+    margin-bottom: 25px;
     color: #fdfaff;
-    text-shadow: 0 0 18px rgba(38,229,255,0.35);
+    text-shadow: 0 0 18px rgba(38,229,255,0.3);
   }
 
   /* accordion */
@@ -411,7 +416,7 @@
   }
   input, select, textarea {
     width: 100%;
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.05);
     border: 1px solid var(--border-glow);
     border-radius: 12px;
     padding: 14px 16px;
@@ -467,7 +472,6 @@
     padding-right: 4px;
   }
   .busy-monitor-list::-webkit-scrollbar { width: 5px; }
-  .busy-monitor-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.01); }
   .busy-monitor-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
   .busy-monitor-item {
@@ -493,9 +497,8 @@
 
   .status-check-result { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
   .danger-btn { background: linear-gradient(90deg, #ff4747, #a80000); border: none; color: #fff; }
-  .danger-btn:hover { box-shadow: 0 0 16px rgba(255,71,71,0.4); }
 
-  /* footer */
+  /* ---------- FOOTER ---------- */
   footer {
     padding: 50px 24px 80px;
     text-align: center;
@@ -513,8 +516,8 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(6,3,18,0.78);
-    backdrop-filter: blur(6px);
+    background: rgba(5,2,20,0.85);
+    backdrop-filter: blur(8px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -598,6 +601,7 @@
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="nav">
   <div class="logo-mark">
     <img src="logo.png" alt="Logo">
@@ -624,16 +628,18 @@
           </linearGradient>
         </defs>
         <path d="M100 48 C100 22, 76 8, 55 8 C29 8, 10 28, 10 54 C10 92, 55 122, 100 156 C145 122, 190 92, 190 54 C190 28, 171 8, 145 8 C124 8, 100 22, 100 48 Z"
-              fill="none" stroke="url(#heartGradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"
-              filter="drop-shadow(0 0 8px rgba(255,46,196,0.5))"/>
+            fill="none" stroke="url(#heartGradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"
+            filter="drop-shadow(0 0 8px rgba(255,46,196,0.5))"/>
       </svg>
       <div class="equalizer heart-equalizer">
         <div class="bar"></div><div class="bar"></div><div class="bar"></div>
         <div class="bar"></div><div class="bar"></div>
       </div>
     </div>
+    
     <h1 class="hero-title display">SCHOOLVISION</h1>
     <div class="hero-slogan script-font">United by Music</div>
+    <div class="school-contest-label">SCHOOL SONG CONTEST</div>
     <p class="hero-sub" id="heroSubtitle">Школьный музыкальный конкурс в стиле большого европейского шоу.</p>
     
     <!-- Таймер обратного отсчета -->
@@ -686,7 +692,6 @@
   <h2 class="section-title display">Заявка на участие</h2>
 
   <div class="apply-layout">
-    
     <div>
       <div class="form-card" style="margin-bottom: 20px;">
         <form id="applicationForm">
@@ -737,7 +742,6 @@
         <li style="color:var(--text-dim); font-style:italic; font-size:13px; text-align:center; padding:20px 0;">Загрузка базы данных...</li>
       </ul>
     </div>
-
   </div>
 
   <div class="form-card" style="margin-top: 30px;">
@@ -754,7 +758,7 @@
 
   <div class="form-card">
     <h3 style="margin-bottom:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;">Проверить статус своей заявки</h3>
-    <div class="form-grid">
+    <div class="form-grid" style="display:grid; grid-template-columns:1fr; gap:10px;">
       <div>
         <label>Ваш класс</label>
         <input type="text" id="statusCheckClass" placeholder="Например, 9Б">
@@ -769,7 +773,7 @@
   <h2 class="section-title display">Вопросы оргкомитету</h2>
   <div class="form-card">
     <form id="questionForm">
-      <div class="form-grid">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
         <div>
           <label>Имя</label>
           <input type="text" id="qName" required>
@@ -841,10 +845,9 @@
           <input type="checkbox" id="adminSystemModeCheckbox">
           <label style="margin: 0; font-weight: 700; color: #fff; cursor: pointer;">Включить ТЕСТОВЫЙ режим (Данные заявок изолируются)</label>
         </div>
-        <p class="small-note" style="color: var(--text-dim); margin-top: 4px;">При включении все заявки с сайта будут записываться в отдельный тестовый список, не смешиваясь с реальным концертом.</p>
       </div>
 
-      <div class="form-grid">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
         <div><label>Дата</label><input type="text" id="adminDate" placeholder="Например, 25 апреля 2026"></div>
         <div><label>Точное время и дата (для таймера)</label><input type="datetime-local" id="adminEventTimestamp"></div>
         <div><label>Место</label><input type="text" id="adminPlace" placeholder="Например, Актовый зал"></div>
@@ -864,8 +867,7 @@
         <label style="margin:0;">Голосование открыто</label>
       </div>
 
-      <!-- Кнопка экспорта итогов -->
-      <button class="btn" id="exportResultsBtn" style="margin-bottom: 20px; background: linear-gradient(90deg, #26e5ff, #1c5cff); width: 100%;">📥 Экспортировать сводный протокол (.txt)</button>
+      <button class="btn" id="exportResultsBtn" style="margin-bottom: 20px; background: linear-gradient(90deg, var(--neon-cyan), #1c5cff); width: 100%;">📥 Экспортировать сводный протокол (.txt)</button>
 
       <h4 style="margin-bottom:10px;">Пункты правил</h4>
       <div id="adminRulesList"></div>
@@ -961,7 +963,7 @@
 
   var DEFAULT_RULES_OBJ = [
     { title: "Выбор страны и года песни", description: "При подаче заявки обязательно выберите страну-участницу Евровидения и год её выступления. Повторяться странам нельзя, поэтому поторопитесь занять любимую!" },
-    { title: "Формат выступления", description: "Информация о длительности треков и сценическом перформансе шоу." },
+    { title: "Формат шоу", description: "Информация о длительности треков и сценическом перформансе шоу." },
     { title: "Состав команды", description: "Количество человек на сцене и корректное распределение ролей." },
     { title: "Критерии жюри", description: "Как будут выставляться баллы оргкомитетом и приглашенными независимыми экспертами." }
   ];
@@ -993,7 +995,7 @@
   fetch("eurovision-db.json")
     .then(function(res) { return res.json(); })
     .then(function(data) { songsDatabase = data; })
-    .catch(function(err) { console.error("Не удалось загрузить локальный файл eurovision-db.json: ", err); });
+    .catch(function(err) { console.error("Не удалось загрузить eurovision-db.json: ", err); });
 
   document.getElementById("appCountry").addEventListener("change", function() {
     var countryName = this.value;
@@ -1004,8 +1006,6 @@
     
     document.getElementById("appSong").value = "";
     document.getElementById("appArtist").value = "";
-    document.getElementById("appSong").placeholder = "Выберите год для автозаполнения";
-    document.getElementById("appArtist").placeholder = "Выберите год для автозаполнения";
 
     if (songsDatabase[countryName]) {
       var years = Object.keys(songsDatabase[countryName]).sort(function(a, b) { return b - a; });
@@ -1041,8 +1041,6 @@
     } else {
       songInput.value = "";
       artistInput.value = "";
-      songInput.placeholder = "Комбинация не найдена в JSON. Введите вручную...";
-      artistInput.placeholder = "Введите исполнителя...";
       songInput.readOnly = false;
       artistInput.readOnly = false;
     }
@@ -1180,7 +1178,6 @@
       tableHtml = '<tr><td colspan="7" style="color:var(--text-dim); text-align: center;">Заявок пока нет</td></tr>';
       monitorHtml = '<li style="color:var(--text-dim); font-style:italic; font-size:13px; text-align:center; padding:20px 0;">Все страны пока свободны!</li>';
     } else {
-      // Сортируем для таблицы по номеру жеребьевки (если она была)
       var sortedApps = applicationsData.slice().sort(function(a, b) {
         var ordA = a.stageOrder !== undefined ? a.stageOrder : 999;
         var ordB = b.stageOrder !== undefined ? b.stageOrder : 999;
@@ -1190,8 +1187,14 @@
       for (var i = 0; i < sortedApps.length; i++) {
         var a = sortedApps[i];
         var flag = getCountryFlag(a.country);
-        var audioUrl = countrySongsMap[a.country] || "";
-        var playBtnHtml = audioUrl ? '<button class="btn btn-small" onclick="playPreview(\'' + audioUrl + '\')">▶ Слушать</button>' : '<span style="color:var(--text-dim);font-size:11px;">Нет трека</span>';
+        
+        var songObj = countrySongsMap[a.country];
+        var audioUrl = "";
+        if (songObj) {
+          audioUrl = typeof songObj === 'string' ? songObj : (songObj.url || "");
+        }
+
+        var playBtnHtml = audioUrl ? '<button class="btn btn-small" onclick="playPreview(\'' + escapeHtml(audioUrl) + '\')">▶ Слушать</button>' : '<span style="color:var(--text-dim);font-size:11px;">Нет трека</span>';
         var orderBadge = a.stageOrder ? '<b>№' + a.stageOrder + '</b>' : '—';
 
         tableHtml += '<tr>' +
@@ -1337,6 +1340,7 @@
         "Трек: " + artist + " — «" + song + "»";
 
       sendTelegramMessage(msg);
+      alert("Заявка успешно отправлена на модерацию!");
     }).catch(function (err) { console.error(err); });
   });
 
@@ -1380,6 +1384,7 @@
 
     questionsDocRef.set({ items: updatedItems }, { merge: true }).then(function () {
       document.getElementById("questionForm").reset();
+      alert("Вопрос успешно отправлен!");
       var msg = "❓ Новый вопрос оргкомитету\nИмя: " + name + "\nТелефон: " + phone + "\nВопрос: " + text;
       sendTelegramMessage(msg);
     }).catch(function (err) { console.error(err); });
@@ -1505,7 +1510,6 @@
     }).catch(function (err) { console.error(err); });
   });
 
-  // Логика проведения жеребьевки
   document.getElementById("randomizeOrderBtn").addEventListener("click", function() {
     var activePath = contentData.systemMode === "test" ? "applications:test_list" : "applications:list";
     var approvedApps = applicationsData.filter(function(a) { return a.status === "approved"; });
@@ -1543,7 +1547,6 @@
     }).catch(function(err) { console.error(err); });
   });
 
-  // Логика экспорта результатов в текстовый файл
   document.getElementById("exportResultsBtn").addEventListener("click", function() {
     var reportText = "=== ОФИЦИАЛЬНЫЙ ПРОТОКОЛ SCHOOLVISION ===\n\n";
     if (applicationsData.length === 0) {
