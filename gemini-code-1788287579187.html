@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Школьный Календарь-Дневник</title>
+  
+  <!-- PWA и мета-теги -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Дневник">
+  
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --completed: #10b981;
+      --today-border: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .date-picker {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 8px;
+      outline: none;
+      color-scheme: dark;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .grid-days {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      position: relative;
+    }
+
+    .card.is-today {
+      border: 2px solid var(--today-border);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card.is-today .card-title {
+      color: var(--today-border);
+    }
+
+    .today-badge {
+      font-size: 0.75rem;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--today-border);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .lesson-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .lesson-header {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .hw-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hw-input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+    }
+
+    .hw-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--completed);
+    }
+
+    .done .hw-input {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .schedule-input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📅 Календарь-Дневник</h1>
+
+    <div class="controls">
+      <button class="nav-btn" onclick="changeWeek(-1)">← Пред.</button>
+      <button class="nav-btn" onclick="goToday()">Сегодня</button>
+      <button class="nav-btn" onclick="changeWeek(1)">След. →</button>
+      <input type="date" id="datePicker" class="date-picker" onchange="jumpToDate(this.value)">
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('homework')">Дневник</button>
+      <button class="tab-btn" onclick="switchTab('schedule')">Шаблон уроков</button>
+    </div>
+  </header>
+
+  <!-- Вкладка: Дневник с датами -->
+  <main id="homework-view" class="view active">
+    <div class="grid-days" id="homework-grid"></div>
+  </main>
+
+  <!-- Вкладка: Редактирование общего расписания -->
+  <main id="schedule-view" class="view">
+    <div class="grid-days" id="schedule-grid"></div>
+  </main>
+
+  <script>
+    const WEEKDAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'];
+    let currentMonday = getMonday(new Date());
+
+    // Базовый шаблон уроков по дням недели
+    let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_template')) || {
+      0: ['Математика', 'Физика', 'Химия'],
+      1: ['Русский язык', 'Литература', 'История'],
+      2: ['Информатика', 'Математика', 'Английский'],
+      3: ['Биология', 'География', 'Физкультура'],
+      4: ['Математика', 'Физика', 'Обществознание']
+    };
+
+    // ДЗ, привязанное к конкретным датам (Формат ключа: YYYY-MM-DD_lessonIndex)
+    let homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
+
+    function saveData() {
+      localStorage.setItem('diary_schedule_template', JSON.stringify(scheduleTemplate));
+      localStorage.setItem('diary_hw_dates', JSON.stringify(homework));
+    }
+
+    function getMonday(date) {
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+      return new Date(d.setDate(diff));
+    }
+
+    function formatDateKey(date) {
+      return date.toISOString().split('T')[0];
+    }
+
+    function formatDateDisplay(date) {
+      return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    }
+
+    function changeWeek(direction) {
+      currentMonday.setDate(currentMonday.getDate() + (direction * 7));
+      renderHomework();
+    }
+
+    function goToday() {
+      currentMonday = getMonday(new Date());
+      renderHomework();
+    }
+
+    function jumpToDate(dateStr) {
+      if (!dateStr) return;
+      currentMonday = getMonday(new Date(dateStr));
+      renderHomework();
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+
+      if (tab === 'homework') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('homework-view').classList.add('active');
+        renderHomework();
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('schedule-view').classList.add('active');
+        renderSchedule();
+      }
+    }
+
+    function renderHomework() {
+      const container = document.getElementById('homework-grid');
+      container.innerHTML = '';
+
+      const todayStr = formatDateKey(new Date());
+
+      for (let i = 0; i < 5; i++) {
+        const dayDate = new Date(currentMonday);
+        dayDate.setDate(dayDate.getDate() + i);
+
+        const dateKey = formatDateKey(dayDate);
+        const isToday = dateKey === todayStr;
+
+        const card = document.createElement('div');
+        card.className = `card ${isToday ? 'is-today' : ''}`;
+
+        const subjects = scheduleTemplate[i] || [];
+        let lessonsList = subjects.map((subject, idx) => {
+          const hwKey = `${dateKey}_${idx}`;
+          const hwData = homework[hwKey] || { text: '', done: false };
+
+          return `
+            <div class="lesson-item ${hwData.done ? 'done' : ''}">
+              <div class="lesson-header">${idx + 1}. ${escapeHtml(subject)}</div>
+              <div class="hw-container">
+                <input type="checkbox" class="checkbox" ${hwData.done ? 'checked' : ''} 
+                  onchange="toggleDone('${hwKey}', this.checked)">
+                <input type="text" class="hw-input" placeholder="Задание..." value="${escapeHtml(hwData.text)}"
+                  onchange="updateHw('${hwKey}', this.value)">
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        card.innerHTML = `
+          <div class="card-title">
+            <span>${WEEKDAYS[i]}, ${formatDateDisplay(dayDate)}</span>
+            ${isToday ? '<span class="today-badge">Сегодня</span>' : ''}
+          </div>
+          <div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Уроков нет</span>'}</div>
+        `;
+        container.appendChild(card);
+      }
+
+      // Синхронизация поля с выбором даты
+      document.getElementById('datePicker').value = formatDateKey(currentMonday);
+    }
+
+    function renderSchedule() {
+      const container = document.getElementById('schedule-grid');
+      container.innerHTML = '';
+
+      WEEKDAYS.forEach((dayName, dayIndex) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const lessons = scheduleTemplate[dayIndex] || [];
+        let listHtml = lessons.map((subject, idx) => `
+          <div class="schedule-input-group">
+            <input type="text" class="hw-input" value="${escapeHtml(subject)}" 
+              onchange="updateSubjectTemplate(${dayIndex}, ${idx}, this.value)">
+            <button class="btn btn-danger" onclick="removeSubjectTemplate(${dayIndex}, ${idx})">✕</button>
+          </div>
+        `).join('');
+
+        card.innerHTML = `
+          <div class="card-title">${dayName}</div>
+          <div class="item-list">${listHtml}</div>
+          <button class="btn" style="margin-top: 12px; width: 100%;" onclick="addSubjectTemplate(${dayIndex})">+ Добавить урок</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function updateHw(key, text) {
+      if (!homework[key]) homework[key] = { text: '', done: false };
+      homework[key].text = text;
+      saveData();
+    }
+
+    function toggleDone(key, done) {
+      if (!homework[key]) homework[key] = { text: '', done: false };
+      homework[key].done = done;
+      saveData();
+      renderHomework();
+    }
+
+    function updateSubjectTemplate(dayIndex, lessonIndex, value) {
+      scheduleTemplate[dayIndex][lessonIndex] = value;
+      saveData();
+    }
+
+    function addSubjectTemplate(dayIndex) {
+      if (!scheduleTemplate[dayIndex]) scheduleTemplate[dayIndex] = [];
+      scheduleTemplate[dayIndex].push('Новый предмет');
+      saveData();
+      renderSchedule();
+    }
+
+    function removeSubjectTemplate(dayIndex, lessonIndex) {
+      scheduleTemplate[dayIndex].splice(lessonIndex, 1);
+      saveData();
+      renderSchedule();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    renderHomework();
+
+    // Регистрация PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker зарегистрирован', reg))
+          .catch(err => console.log('Ошибка регистрации SW', err));
+      });
+    }
+  </script>
+</body>
+</html>
