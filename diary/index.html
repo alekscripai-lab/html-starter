@@ -527,7 +527,7 @@
 
     document.getElementById('groupSelect').value = userGroup;
 
-    // Синхронизация с облаком
+    // Подписка на изменение базы данных
     db.ref('homework_v2').on('value', (snapshot) => {
       homework = snapshot.val() || {};
       renderHomework();
@@ -888,7 +888,7 @@
           const data = JSON.parse(e.target.result);
           if (data.homework) {
             db.ref('homework_v2').set(data.homework);
-            alert('Данные загружены в облако!');
+            alert('Данные успешно загружены в облако!');
           }
         } catch (err) {
           alert('Ошибка файла!');
@@ -920,9 +920,12 @@
 
     renderHomework();
 
+    // Автоматическое обновление Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error', err));
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.update();
+        }).catch(err => console.log('SW error', err));
       });
     }
   </script>
