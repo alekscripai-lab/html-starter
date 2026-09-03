@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Школьный Календарь-Дневник</title>
   
-  <!-- PWA и мета-теги -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,6 +22,8 @@
       --border: #334155;
       --completed: #10b981;
       --today-border: #f59e0b;
+      --active-hw-border: #10b981;
+      --active-hw-bg: rgba(16, 185, 129, 0.08);
     }
 
     * {
@@ -35,42 +36,47 @@
     body {
       background-color: var(--bg);
       color: var(--text);
-      padding: 20px;
-      max-width: 1200px;
+      padding: 16px;
+      max-width: 800px;
       margin: 0 auto;
     }
 
     header {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
     }
 
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     h1 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
     }
 
     .controls {
       display: flex;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .nav-btn {
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
+      font-size: 0.85rem;
     }
 
     .nav-btn:hover {
@@ -82,10 +88,11 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 7px 12px;
+      padding: 7px 10px;
       border-radius: 8px;
       outline: none;
       color-scheme: dark;
+      font-size: 0.85rem;
     }
 
     .tabs {
@@ -94,13 +101,16 @@
     }
 
     .tab-btn {
+      flex: 1;
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 8px 16px;
+      padding: 8px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 500;
+      font-size: 0.9rem;
+      text-align: center;
     }
 
     .tab-btn.active {
@@ -117,51 +127,99 @@
       display: block;
     }
 
-    .grid-days {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
+    .days-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 16px;
-      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, background-color 0.2s;
     }
 
     .card.is-today {
       border: 2px solid var(--today-border);
     }
 
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-      color: var(--accent);
+    .card.has-hw {
+      border-color: var(--active-hw-border);
+      background-color: var(--active-hw-bg);
+    }
+
+    .card.is-today.has-hw {
+      border-color: var(--today-border);
+    }
+
+    .card-header {
+      padding: 14px 16px;
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      user-select: none;
     }
 
-    .card.is-today .card-title {
-      color: var(--today-border);
+    .card-title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .card-title-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .today-badge {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       background: rgba(245, 158, 11, 0.2);
       color: var(--today-border);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .hw-badge {
+      font-size: 0.75rem;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--completed);
       padding: 2px 8px;
       border-radius: 12px;
-      font-weight: bold;
+      font-weight: 600;
+    }
+
+    .arrow-icon {
+      transition: transform 0.3s ease;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .card.open .arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    .card-body {
+      display: none;
+      padding: 0 16px 16px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .card.open .card-body {
+      display: block;
     }
 
     .item-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .lesson-item {
@@ -175,14 +233,24 @@
     }
 
     .lesson-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+    }
+
+    .lesson-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
     }
 
     .hw-container {
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-top: 2px;
     }
 
     .hw-input {
@@ -192,7 +260,7 @@
       color: var(--text);
       padding: 6px 10px;
       border-radius: 6px;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
     }
 
     .hw-input:focus {
@@ -217,6 +285,11 @@
       display: flex;
       gap: 8px;
       margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .schedule-input-group input {
+      font-size: 0.8rem;
     }
 
     .btn {
@@ -235,6 +308,7 @@
 
     .btn-danger {
       background: #ef4444;
+      padding: 6px 10px;
     }
 
     .btn-danger:hover {
@@ -245,7 +319,13 @@
 <body>
 
   <header>
-    <h1>📅 Календарь-Дневник</h1>
+    <div class="header-top">
+      <h1>📅 11 «А» Дневник</h1>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('homework')">Дневник</button>
+        <button class="tab-btn" onclick="switchTab('schedule')">Расписание</button>
+      </div>
+    </div>
 
     <div class="controls">
       <button class="nav-btn" onclick="changeWeek(-1)">← Пред.</button>
@@ -253,41 +333,87 @@
       <button class="nav-btn" onclick="changeWeek(1)">След. →</button>
       <input type="date" id="datePicker" class="date-picker" onchange="jumpToDate(this.value)">
     </div>
-
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('homework')">Дневник</button>
-      <button class="tab-btn" onclick="switchTab('schedule')">Шаблон уроков</button>
-    </div>
   </header>
 
-  <!-- Вкладка: Дневник с датами -->
+  <!-- Вкладка: Дневник с раскрывающимися днями -->
   <main id="homework-view" class="view active">
-    <div class="grid-days" id="homework-grid"></div>
+    <div class="days-accordion" id="homework-grid"></div>
   </main>
 
-  <!-- Вкладка: Редактирование общего расписания -->
+  <!-- Вкладка: Шаблон расписания -->
   <main id="schedule-view" class="view">
-    <div class="grid-days" id="schedule-grid"></div>
+    <div class="days-accordion" id="schedule-grid"></div>
   </main>
 
   <script>
     const WEEKDAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'];
-    let currentMonday = getMonday(new Date());
+    
+    // Стандартное расписание звонков
+    const TIMES = [
+      '08:15 – 09:00',
+      '09:15 – 10:00',
+      '10:15 – 11:00',
+      '11:20 – 12:05',
+      '12:20 – 13:05',
+      '13:15 – 14:00',
+      '14:05 – 14:50'
+    ];
 
-    // Базовый шаблон уроков по дням недели
-    let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_template')) || {
-      0: ['Математика', 'Физика', 'Химия'],
-      1: ['Русский язык', 'Литература', 'История'],
-      2: ['Информатика', 'Математика', 'Английский'],
-      3: ['Биология', 'География', 'Физкультура'],
-      4: ['Математика', 'Физика', 'Обществознание']
+    // Базовое расписание 11 «А» класса по умолчанию
+    const DEFAULT_SCHEDULE = {
+      0: [
+        { name: 'Информатика', room: 'каб. 13' },
+        { name: 'Информатика', room: 'каб. 13' },
+        { name: 'Русский язык', room: 'каб. 27' },
+        { name: 'Русский язык', room: 'каб. 27' },
+        { name: 'Рум / Англ', room: '17 / 19' },
+        { name: 'Англ / Рум', room: '19 / 17' },
+        { name: 'География', room: 'каб. 18' }
+      ],
+      1: [
+        { name: 'Рум / Англ', room: '17 / 19' },
+        { name: 'Англ / Рум', room: '19 / 17' },
+        { name: 'Математика', room: 'каб. 22' },
+        { name: 'Химия', room: 'каб. 24' },
+        { name: 'Русский язык', room: 'каб. 27' },
+        { name: 'История', room: 'каб. 11' },
+        { name: 'История', room: 'каб. 11' }
+      ],
+      2: [
+        { name: 'Разв. личн.', room: 'каб. 26' },
+        { name: 'Математика', room: 'каб. 24' },
+        { name: 'География', room: 'каб. 18' },
+        { name: 'Биология', room: 'каб. 20' },
+        { name: 'Физ. восп.', room: 'с/зал' },
+        { name: 'Физика', room: 'каб. 23' },
+        { name: 'Курс по выбору', room: 'каб. 26' }
+      ],
+      3: [
+        { name: 'Рум / Англ', room: '17 / 19' },
+        { name: 'Рум / Англ', room: '17 / 19' },
+        { name: 'Англ / Рум', room: '19 / 17' },
+        { name: 'Англ / Рум', room: '19 / 17' },
+        { name: 'История', room: 'каб. 11' },
+        { name: 'Математика', room: 'каб. 13' },
+        { name: 'Химия', room: 'каб. 24' }
+      ],
+      4: [
+        { name: 'Гражд. восп.', room: 'каб. 18' },
+        { name: 'Русский язык', room: 'каб. 27' },
+        { name: 'Физ. восп.', room: 'с/зал' },
+        { name: 'Математика', room: 'каб. 18' },
+        { name: 'Физика', room: 'каб. 23' },
+        { name: 'Биология', room: 'каб. 20' }
+      ]
     };
 
-    // ДЗ, привязанное к конкретным датам (Формат ключа: YYYY-MM-DD_lessonIndex)
+    let currentMonday = getMonday(new Date());
+    let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_11a')) || DEFAULT_SCHEDULE;
     let homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
+    let openCards = {}; // Хранит состояние открыта/закрыта плашка дня
 
     function saveData() {
-      localStorage.setItem('diary_schedule_template', JSON.stringify(scheduleTemplate));
+      localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
       localStorage.setItem('diary_hw_dates', JSON.stringify(homework));
     }
 
@@ -308,17 +434,20 @@
 
     function changeWeek(direction) {
       currentMonday.setDate(currentMonday.getDate() + (direction * 7));
+      openCards = {}; // Сбросить развернутые дни при смене недели
       renderHomework();
     }
 
     function goToday() {
       currentMonday = getMonday(new Date());
+      openCards = {};
       renderHomework();
     }
 
     function jumpToDate(dateStr) {
       if (!dateStr) return;
       currentMonday = getMonday(new Date(dateStr));
+      openCards = {};
       renderHomework();
     }
 
@@ -337,10 +466,14 @@
       }
     }
 
+    function toggleCard(dateKey) {
+      openCards[dateKey] = !openCards[dateKey];
+      renderHomework();
+    }
+
     function renderHomework() {
       const container = document.getElementById('homework-grid');
       container.innerHTML = '';
-
       const todayStr = formatDateKey(new Date());
 
       for (let i = 0; i < 5; i++) {
@@ -350,17 +483,32 @@
         const dateKey = formatDateKey(dayDate);
         const isToday = dateKey === todayStr;
 
-        const card = document.createElement('div');
-        card.className = `card ${isToday ? 'is-today' : ''}`;
+        // По умолчанию раскрыт текущий день
+        if (openCards[dateKey] === undefined) {
+          openCards[dateKey] = isToday;
+        }
 
-        const subjects = scheduleTemplate[i] || [];
-        let lessonsList = subjects.map((subject, idx) => {
+        const lessons = scheduleTemplate[i] || [];
+        let activeHwCount = 0;
+
+        let lessonsList = lessons.map((lesson, idx) => {
           const hwKey = `${dateKey}_${idx}`;
           const hwData = homework[hwKey] || { text: '', done: false };
 
+          if (hwData.text.trim().length > 0 && !hwData.done) {
+            activeHwCount++;
+          }
+
+          const lessonName = typeof lesson === 'string' ? lesson : lesson.name;
+          const lessonRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
+          const timeText = TIMES[idx] || '';
+
           return `
             <div class="lesson-item ${hwData.done ? 'done' : ''}">
-              <div class="lesson-header">${idx + 1}. ${escapeHtml(subject)}</div>
+              <div class="lesson-header">
+                <span>${idx + 1}. ${escapeHtml(lessonName)}</span>
+                <span class="lesson-meta">${lessonRoom} ${timeText ? '• ' + timeText : ''}</span>
+              </div>
               <div class="hw-container">
                 <input type="checkbox" class="checkbox" ${hwData.done ? 'checked' : ''} 
                   onchange="toggleDone('${hwKey}', this.checked)">
@@ -371,17 +519,30 @@
           `;
         }).join('');
 
+        const hasHw = activeHwCount > 0;
+        const isOpen = openCards[dateKey];
+
+        const card = document.createElement('div');
+        card.className = `card ${isToday ? 'is-today' : ''} ${hasHw ? 'has-hw' : ''} ${isOpen ? 'open' : ''}`;
+
         card.innerHTML = `
-          <div class="card-title">
-            <span>${WEEKDAYS[i]}, ${formatDateDisplay(dayDate)}</span>
-            ${isToday ? '<span class="today-badge">Сегодня</span>' : ''}
+          <div class="card-header" onclick="toggleCard('${dateKey}')">
+            <div class="card-title-left">
+              <span>${WEEKDAYS[i]}, ${formatDateDisplay(dayDate)}</span>
+              ${isToday ? '<span class="today-badge">Сегодня</span>' : ''}
+            </div>
+            <div class="card-title-right">
+              ${hasHw ? `<span class="hw-badge">Задано: ${activeHwCount}</span>` : ''}
+              <span class="arrow-icon">▼</span>
+            </div>
           </div>
-          <div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Уроков нет</span>'}</div>
+          <div class="card-body">
+            <div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Уроков нет</span>'}</div>
+          </div>
         `;
         container.appendChild(card);
       }
 
-      // Синхронизация поля с выбором даты
       document.getElementById('datePicker').value = formatDateKey(currentMonday);
     }
 
@@ -391,21 +552,33 @@
 
       WEEKDAYS.forEach((dayName, dayIndex) => {
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'card open';
 
         const lessons = scheduleTemplate[dayIndex] || [];
-        let listHtml = lessons.map((subject, idx) => `
-          <div class="schedule-input-group">
-            <input type="text" class="hw-input" value="${escapeHtml(subject)}" 
-              onchange="updateSubjectTemplate(${dayIndex}, ${idx}, this.value)">
-            <button class="btn btn-danger" onclick="removeSubjectTemplate(${dayIndex}, ${idx})">✕</button>
-          </div>
-        `).join('');
+        let listHtml = lessons.map((lesson, idx) => {
+          const name = typeof lesson === 'string' ? lesson : lesson.name;
+          const room = typeof lesson === 'object' && lesson.room ? lesson.room : '';
+
+          return `
+            <div class="schedule-input-group">
+              <span style="font-size:0.8rem; color:var(--text-muted); width:20px;">${idx + 1}.</span>
+              <input type="text" class="hw-input" placeholder="Предмет" value="${escapeHtml(name)}" 
+                onchange="updateSubjectTemplate(${dayIndex}, ${idx}, 'name', this.value)">
+              <input type="text" class="hw-input" style="width:90px;" placeholder="Кабинет" value="${escapeHtml(room)}" 
+                onchange="updateSubjectTemplate(${dayIndex}, ${idx}, 'room', this.value)">
+              <button class="btn btn-danger" onclick="removeSubjectTemplate(${dayIndex}, ${idx})">✕</button>
+            </div>
+          `;
+        }).join('');
 
         card.innerHTML = `
-          <div class="card-title">${dayName}</div>
-          <div class="item-list">${listHtml}</div>
-          <button class="btn" style="margin-top: 12px; width: 100%;" onclick="addSubjectTemplate(${dayIndex})">+ Добавить урок</button>
+          <div class="card-header">
+            <div class="card-title-left">${dayName}</div>
+          </div>
+          <div class="card-body">
+            <div class="item-list">${listHtml}</div>
+            <button class="btn" style="margin-top: 12px; width: 100%;" onclick="addSubjectTemplate(${dayIndex})">+ Добавить урок</button>
+          </div>
         `;
         container.appendChild(card);
       });
@@ -415,6 +588,7 @@
       if (!homework[key]) homework[key] = { text: '', done: false };
       homework[key].text = text;
       saveData();
+      renderHomework();
     }
 
     function toggleDone(key, done) {
@@ -424,14 +598,17 @@
       renderHomework();
     }
 
-    function updateSubjectTemplate(dayIndex, lessonIndex, value) {
-      scheduleTemplate[dayIndex][lessonIndex] = value;
+    function updateSubjectTemplate(dayIndex, lessonIndex, field, value) {
+      if (typeof scheduleTemplate[dayIndex][lessonIndex] === 'string') {
+        scheduleTemplate[dayIndex][lessonIndex] = { name: scheduleTemplate[dayIndex][lessonIndex], room: '' };
+      }
+      scheduleTemplate[dayIndex][lessonIndex][field] = value;
       saveData();
     }
 
     function addSubjectTemplate(dayIndex) {
       if (!scheduleTemplate[dayIndex]) scheduleTemplate[dayIndex] = [];
-      scheduleTemplate[dayIndex].push('Новый предмет');
+      scheduleTemplate[dayIndex].push({ name: 'Новый предмет', room: '' });
       saveData();
       renderSchedule();
     }
@@ -443,17 +620,14 @@
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+      return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
     renderHomework();
 
-    // Регистрация PWA Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker зарегистрирован', reg))
-          .catch(err => console.log('Ошибка регистрации SW', err));
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error', err));
       });
     }
   </script>
