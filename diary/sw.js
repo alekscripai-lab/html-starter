@@ -1,5 +1,5 @@
-const CACHE_NAME = 'diary-v1';
-const ASSETS = ['./index.html', './manifest.json'];
+const CACHE_NAME = 'diary-v2';
+const ASSETS = ['./index.html', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
