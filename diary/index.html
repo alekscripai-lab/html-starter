@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Школьный Календарь-Дневник</title>
   
   <link rel="manifest" href="manifest.json">
@@ -33,22 +33,25 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      padding: 16px;
-      max-width: 800px;
+      padding: 12px;
+      max-width: 600px;
       margin: 0 auto;
+      user-select: none;
     }
 
+    /* Адаптивная двухэтажная шапка */
     header {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -56,107 +59,122 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
     }
 
     h1 {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       font-weight: 700;
+      white-space: nowrap;
     }
 
+    .group-select {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      outline: none;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Строка навигации по датам */
     .controls {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
     }
 
     .nav-btn {
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
     }
 
-    .nav-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .date-picker, .group-select {
+    .date-picker {
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 7px 10px;
+      padding: 7px 6px;
       border-radius: 8px;
       outline: none;
       color-scheme: dark;
-      font-size: 0.85rem;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      width: 100%;
       text-align: center;
     }
 
-    .tab-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
+    /* Виджет и фильтры */
     .widget-card {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       border: 1px solid var(--accent);
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .widget-title {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--accent);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .widget-body {
       font-weight: 600;
-      font-size: 0.95rem;
-      margin-top: 2px;
+      font-size: 0.9rem;
+      margin-top: 1px;
     }
 
     .widget-meta {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
     }
 
     .filter-bar {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      font-size: 0.85rem;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
 
@@ -165,9 +183,9 @@
       border: 1px solid var(--border);
       color: var(--text-muted);
       padding: 4px 10px;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
     .filter-btn.active {
@@ -187,13 +205,14 @@
     .days-accordion {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      touch-action: pan-y;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
       transition: border-color 0.2s, background-color 0.2s;
     }
@@ -213,58 +232,57 @@
     }
 
     .card-header {
-      padding: 14px 16px;
+      padding: 12px 14px;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      user-select: none;
     }
 
     .card-title-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .card-title-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .today-badge {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       background: rgba(245, 158, 11, 0.2);
       color: var(--today-border);
-      padding: 2px 6px;
-      border-radius: 8px;
+      padding: 2px 5px;
+      border-radius: 6px;
       font-weight: bold;
     }
 
     .holiday-badge {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       background: rgba(245, 158, 11, 0.2);
       color: var(--holiday-border);
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 2px 6px;
+      border-radius: 10px;
       font-weight: 600;
     }
 
     .hw-badge {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       background: rgba(16, 185, 129, 0.2);
       color: var(--completed);
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 2px 6px;
+      border-radius: 10px;
       font-weight: 600;
     }
 
     .arrow-icon {
-      transition: transform 0.3s ease;
-      font-size: 0.8rem;
+      transition: transform 0.25s ease;
+      font-size: 0.75rem;
       color: var(--text-muted);
     }
 
@@ -274,7 +292,7 @@
 
     .card-body {
       display: none;
-      padding: 0 16px 16px 16px;
+      padding: 0 12px 12px 12px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -285,23 +303,23 @@
     .item-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 10px;
     }
 
     .holiday-banner {
-      padding: 20px;
+      padding: 16px;
       text-align: center;
       color: var(--holiday-border);
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     .lesson-item {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      padding: 10px;
+      padding: 8px 10px;
       background: rgba(255, 255, 255, 0.03);
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.05);
@@ -312,20 +330,18 @@
       justify-content: space-between;
       align-items: center;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
 
     .lesson-meta {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
-      font-weight: normal;
     }
 
     .hw-container {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 2px;
     }
 
     .hw-input {
@@ -333,57 +349,47 @@
       background: #0f172a;
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 10px;
+      padding: 6px 8px;
       border-radius: 6px;
-      font-size: 0.85rem;
-    }
-
-    .hw-input:focus {
-      outline: none;
-      border-color: var(--accent);
+      font-size: 0.82rem;
     }
 
     .quick-tags {
       display: flex;
-      gap: 6px;
-      margin-top: 4px;
+      gap: 4px;
+      margin-top: 2px;
       overflow-x: auto;
       padding-bottom: 2px;
+      -webkit-overflow-scrolling: touch;
     }
 
     .tag-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 2px 8px;
+      padding: 2px 6px;
       border-radius: 4px;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       cursor: pointer;
       white-space: nowrap;
-    }
-
-    .tag-btn:hover {
-      color: var(--text);
-      border-color: var(--accent);
     }
 
     .checkbox {
       width: 18px;
       height: 18px;
-      cursor: pointer;
       accent-color: var(--completed);
     }
 
     .done .hw-input {
       text-decoration: line-through;
       color: var(--text-muted);
-      opacity: 0.6;
+      opacity: 0.5;
     }
 
     .schedule-input-group {
       display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 6px;
+      margin-bottom: 6px;
       align-items: center;
     }
 
@@ -395,10 +401,7 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: 500;
-    }
-
-    .btn:hover {
-      background: var(--accent-hover);
+      font-size: 0.85rem;
     }
 
     .btn-secondary {
@@ -409,72 +412,39 @@
 
     .btn-danger {
       background: #ef4444;
-      padding: 6px 10px;
+      padding: 6px 8px;
     }
 
     .backup-actions {
       display: flex;
       gap: 8px;
-      margin-top: 24px;
-      padding-top: 16px;
+      margin-top: 20px;
+      padding-top: 14px;
       border-top: 1px solid var(--border);
     }
   </style>
-
-  <!-- Подключение Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyA0p2-jpA-E3a4E102m48SPiXsAHrp9LjA",
-      authDomain: "school-diary-4bb47.firebaseapp.com",
-      projectId: "school-diary-4bb47",
-      storageBucket: "school-diary-4bb47.firebasestorage.app",
-      messagingSenderId: "534309398456",
-      appId: "1:534309398456:web:b11c781a33ecea211d514d",
-      measurementId: "G-B8L6CMFRZJ",
-      databaseURL: "https://school-diary-4bb47-default-rtdb.europe-west1.firebasedatabase.app"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.db = db;
-    window.dbRef = ref;
-    window.dbSet = set;
-    window.dbOnValue = onValue;
-
-    // Подписка на обновления ДЗ из облака
-    onValue(ref(db, 'homework'), (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        window.homework = data;
-        localStorage.setItem('diary_hw_dates', JSON.stringify(data));
-        if (window.renderHomework) window.renderHomework();
-      }
-    });
-  </script>
 </head>
 <body>
 
   <header>
     <div class="header-top">
-      <h1>📅 11 «А» Дневник</h1>
+      <h1>📅 11 «А»</h1>
+      
+      <select class="group-select" id="groupSelect" onchange="changeGroup(this.value)">
+        <option value="1">Группа 1 (Рум/Англ)</option>
+        <option value="2">Группа 2 (Англ/Рум)</option>
+      </select>
+
       <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('homework')">Дневник</button>
-        <button class="tab-btn" onclick="switchTab('schedule')">Расписание</button>
+        <button class="tab-btn" onclick="switchTab('schedule')">Сетка</button>
       </div>
     </div>
 
     <div class="controls">
-      <button class="nav-btn" onclick="changeWeek(-1)">← Пред.</button>
+      <button class="nav-btn" onclick="changeWeek(-1)">←</button>
       <button class="nav-btn" onclick="goToday()">Сегодня</button>
-      <button class="nav-btn" onclick="changeWeek(1)">След. →</button>
-      <select id="groupSelect" class="group-select" onchange="changeGroup(this.value)">
-        <option value="1">Группа 1</option>
-        <option value="2">Группа 2</option>
-      </select>
+      <button class="nav-btn" onclick="changeWeek(1)">→</button>
       <input type="date" id="datePicker" class="date-picker" onchange="jumpToDate(this.value)">
     </div>
   </header>
@@ -488,8 +458,7 @@
   </div>
 
   <div class="filter-bar">
-    <span>Показывать:</span>
-    <button class="filter-btn active" id="filter-all-btn" onclick="setFilter(false)">Все уроки</button>
+    <button class="filter-btn active" id="filter-all-btn" onclick="setFilter(false)">Все предметы</button>
     <button class="filter-btn" id="filter-hw-btn" onclick="setFilter(true)">Только с ДЗ</button>
   </div>
 
@@ -500,8 +469,8 @@
   <main id="schedule-view" class="view">
     <div class="days-accordion" id="schedule-grid"></div>
     <div class="backup-actions">
-      <button class="btn btn-secondary" style="flex:1;" onclick="exportData()">📥 Сохранить бэкап</button>
-      <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('importFile').click()">📤 Загрузить бэкап</button>
+      <button class="btn btn-secondary" style="flex:1;" onclick="exportData()">📥 Сохранить</button>
+      <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('importFile').click()">📤 Загрузить</button>
       <input type="file" id="importFile" style="display:none" onchange="importData(event)">
     </div>
   </main>
@@ -510,13 +479,13 @@
     const WEEKDAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'];
     
     const TIMES = [
-      { start: '08:15', end: '09:00', text: '08:15 – 09:00' },
-      { start: '09:15', end: '10:00', text: '09:15 – 10:00' },
-      { start: '10:15', end: '11:00', text: '10:15 – 11:00' },
-      { start: '11:20', end: '12:05', text: '11:20 – 12:05' },
-      { start: '12:20', end: '13:05', text: '12:20 – 13:05' },
-      { start: '13:15', end: '14:00', text: '13:15 – 14:00' },
-      { start: '14:05', end: '14:50', text: '14:05 – 14:50' }
+      { start: '08:15', end: '09:00', text: '08:15–09:00' },
+      { start: '09:15', end: '10:00', text: '09:15–10:00' },
+      { start: '10:15', end: '11:00', text: '10:15–11:00' },
+      { start: '11:20', end: '12:05', text: '11:20–12:05' },
+      { start: '12:20', end: '13:05', text: '12:20–13:05' },
+      { start: '13:15', end: '14:00', text: '13:15–14:00' },
+      { start: '14:05', end: '14:50', text: '14:05–14:50' }
     ];
 
     const HOLIDAYS = [
@@ -536,9 +505,9 @@
     };
 
     let currentMonday = getMonday(new Date());
-    let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_11a')) || DEFAULT_SCHEDULE;
-    window.homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
     let userGroup = localStorage.getItem('diary_user_group') || '1';
+    let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_11a')) || DEFAULT_SCHEDULE;
+    let homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
     let openCards = {}; 
     let filterOnlyHw = false;
 
@@ -546,31 +515,14 @@
 
     function saveData() {
       localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
-      localStorage.setItem('diary_hw_dates', JSON.stringify(window.homework));
-      
-      // Отправка в облако Firebase
-      if (window.db && window.dbSet && window.dbRef) {
-        window.dbSet(window.dbRef(window.db, 'homework'), window.homework);
-      }
+      localStorage.setItem('diary_hw_dates', JSON.stringify(homework));
+      localStorage.setItem('diary_user_group', userGroup);
     }
 
     function changeGroup(val) {
       userGroup = val;
-      localStorage.setItem('diary_user_group', val);
+      saveData();
       renderHomework();
-    }
-
-    function parseSubjectForGroup(rawName, rawRoom) {
-      if (!rawName.includes('/')) return { name: rawName, room: rawRoom };
-
-      const names = rawName.split('/').map(s => s.trim());
-      const rooms = rawRoom.split('/').map(s => s.trim());
-
-      const isGroup1 = (userGroup === '1');
-      return {
-        name: isGroup1 ? names[0] : (names[1] || names[0]),
-        room: isGroup1 ? rooms[0] : (rooms[1] || rooms[0] || '')
-      };
     }
 
     function getMonday(date) {
@@ -590,6 +542,18 @@
 
     function checkHoliday(dateStr) {
       return HOLIDAYS.find(h => dateStr >= h.start && dateStr <= h.end);
+    }
+
+    function parseSubjectForGroup(nameStr, roomStr) {
+      if (!nameStr.includes('/')) return { name: nameStr, room: roomStr };
+      const partsName = nameStr.split('/').map(s => s.trim());
+      const partsRoom = roomStr.split('/').map(s => s.trim());
+
+      if (userGroup === '1') {
+        return { name: partsName[0] || nameStr, room: partsRoom[0] ? `каб. ${partsRoom[0]}` : roomStr };
+      } else {
+        return { name: partsName[1] || nameStr, room: partsRoom[1] ? `каб. ${partsRoom[1]}` : roomStr };
+      }
     }
 
     function getTargetAutoOpenDateKey() {
@@ -651,9 +615,9 @@
     }
 
     function appendTag(hwKey, tag) {
-      if (!window.homework[hwKey]) window.homework[hwKey] = { text: '', done: false };
-      const current = window.homework[hwKey].text;
-      window.homework[hwKey].text = current ? `${current} ${tag}` : `${tag} `;
+      if (!homework[hwKey]) homework[hwKey] = { text: '', done: false };
+      const current = homework[hwKey].text;
+      homework[hwKey].text = current ? `${current} ${tag}` : `${tag} `;
       saveData();
       renderHomework();
     }
@@ -668,9 +632,9 @@
       const metaEl = document.getElementById('widget-meta');
 
       if (holiday) {
-        labelEl.innerText = 'Выходной день!';
+        labelEl.innerText = 'Выходной!';
         subjectEl.innerText = holiday.name;
-        metaEl.innerText = 'Занятий нет';
+        metaEl.innerText = '';
         return;
       }
 
@@ -679,10 +643,10 @@
 
       if (dayIndex < 0 || dayIndex > 4) {
         labelEl.innerText = 'Завтра';
-        const mondayFirstRaw = scheduleTemplate[0]?.[0];
-        const mondayFirst = mondayFirstRaw ? parseSubjectForGroup(mondayFirstRaw.name || mondayFirstRaw, mondayFirstRaw.room || '') : null;
-        subjectEl.innerText = mondayFirst ? mondayFirst.name : 'Выходной';
-        metaEl.innerText = mondayFirst?.room ? `${mondayFirst.room} • 08:15` : 'Уроков нет';
+        const mondayFirst = scheduleTemplate[0]?.[0];
+        const parsed = mondayFirst ? parseSubjectForGroup(mondayFirst.name || mondayFirst, mondayFirst.room || '') : null;
+        subjectEl.innerText = parsed ? parsed.name : 'Выходной';
+        metaEl.innerText = parsed?.room ? `${parsed.room} • 08:15` : '';
         return;
       }
 
@@ -692,32 +656,33 @@
 
       for (let i = 0; i < todayLessons.length; i++) {
         const time = TIMES[i];
-        const parsed = parseSubjectForGroup(todayLessons[i].name || todayLessons[i], todayLessons[i].room || '');
         if (currentTime >= time.start && currentTime <= time.end) {
-          currentLesson = { ...parsed, time: time.text };
+          currentLesson = { ...todayLessons[i], time: time.text, idx: i };
           break;
         } else if (currentTime < time.start) {
-          nextLesson = { ...parsed, time: time.start };
+          nextLesson = { ...todayLessons[i], time: time.start, idx: i };
           break;
         }
       }
 
       if (currentLesson) {
+        const parsed = parseSubjectForGroup(currentLesson.name || currentLesson, currentLesson.room || '');
         labelEl.innerText = 'Сейчас идет урок';
-        subjectEl.innerText = currentLesson.name;
-        metaEl.innerText = `${currentLesson.room || ''} • до ${TIMES[todayLessons.indexOf(currentLesson)]?.end}`;
+        subjectEl.innerText = parsed.name;
+        metaEl.innerText = `${parsed.room} • до ${TIMES[currentLesson.idx]?.end}`;
       } else if (nextLesson) {
+        const parsed = parseSubjectForGroup(nextLesson.name || nextLesson, nextLesson.room || '');
         labelEl.innerText = 'Следующий урок';
-        subjectEl.innerText = nextLesson.name;
-        metaEl.innerText = `${nextLesson.room || ''} • в ${nextLesson.time}`;
+        subjectEl.innerText = parsed.name;
+        metaEl.innerText = `${parsed.room} • в ${nextLesson.time}`;
       } else {
         labelEl.innerText = 'Уроки завершены';
-        subjectEl.innerText = 'Завтра новые занятия';
+        subjectEl.innerText = 'Отдыхай!';
         metaEl.innerText = '';
       }
     }
 
-    window.renderHomework = function() {
+    function renderHomework() {
       const container = document.getElementById('homework-grid');
       container.innerHTML = '';
       const todayStr = formatDateKey(new Date());
@@ -739,14 +704,8 @@
         let activeHwCount = 0;
 
         let lessonsList = lessons.map((lesson, idx) => {
-          const rawName = typeof lesson === 'string' ? lesson : lesson.name;
-          const rawRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
-          
-          const parsed = parseSubjectForGroup(rawName, rawRoom);
-          
-          // Привязка ДЗ к предмету
-          const hwKey = `${dateKey}_${parsed.name.replace(/\s+/g, '_')}`;
-          const hwData = window.homework[hwKey] || { text: '', done: false };
+          const hwKey = `${dateKey}_${idx}`;
+          const hwData = homework[hwKey] || { text: '', done: false };
 
           if (hwData.text.trim().length > 0 && !hwData.done) {
             activeHwCount++;
@@ -756,13 +715,16 @@
             return '';
           }
 
+          const rawName = typeof lesson === 'string' ? lesson : lesson.name;
+          const rawRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
+          const parsed = parseSubjectForGroup(rawName, rawRoom);
           const timeText = TIMES[idx]?.text || '';
 
           return `
             <div class="lesson-item ${hwData.done ? 'done' : ''}">
               <div class="lesson-header">
                 <span>${idx + 1}. ${escapeHtml(parsed.name)}</span>
-                <span class="lesson-meta">${parsed.room ? parsed.room + ' • ' : ''}${timeText}</span>
+                <span class="lesson-meta">${parsed.room} ${timeText ? '• ' + timeText : ''}</span>
               </div>
               <div class="hw-container">
                 <input type="checkbox" class="checkbox" ${hwData.done ? 'checked' : ''} 
@@ -787,12 +749,9 @@
         const card = document.createElement('div');
         card.className = `card ${isToday ? 'is-today' : ''} ${hasHw ? 'has-hw' : ''} ${holiday ? 'is-holiday' : ''} ${isOpen ? 'open' : ''}`;
 
-        let cardContent = '';
-        if (holiday) {
-          cardContent = `<div class="holiday-banner">🎉 ${holiday.name}</div>`;
-        } else {
-          cardContent = `<div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Нет заданий</span>'}</div>`;
-        }
+        let cardContent = holiday 
+          ? `<div class="holiday-banner">🎉 ${holiday.name}</div>`
+          : `<div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Нет заданий</span>'}</div>`;
 
         card.innerHTML = `
           <div class="card-header" onclick="toggleCard('${dateKey}')">
@@ -832,10 +791,10 @@
 
           return `
             <div class="schedule-input-group">
-              <span style="font-size:0.8rem; color:var(--text-muted); width:20px;">${idx + 1}.</span>
+              <span style="font-size:0.75rem; color:var(--text-muted); width:16px;">${idx + 1}.</span>
               <input type="text" class="hw-input" placeholder="Предмет" value="${escapeHtml(name)}" 
                 onchange="updateSubjectTemplate(${dayIndex}, ${idx}, 'name', this.value)">
-              <input type="text" class="hw-input" style="width:90px;" placeholder="Кабинет" value="${escapeHtml(room)}" 
+              <input type="text" class="hw-input" style="width:80px;" placeholder="Кабинет" value="${escapeHtml(room)}" 
                 onchange="updateSubjectTemplate(${dayIndex}, ${idx}, 'room', this.value)">
               <button class="btn btn-danger" onclick="removeSubjectTemplate(${dayIndex}, ${idx})">✕</button>
             </div>
@@ -848,7 +807,7 @@
           </div>
           <div class="card-body">
             <div class="item-list">${listHtml}</div>
-            <button class="btn" style="margin-top: 12px; width: 100%;" onclick="addSubjectTemplate(${dayIndex})">+ Добавить урок</button>
+            <button class="btn" style="margin-top: 10px; width: 100%;" onclick="addSubjectTemplate(${dayIndex})">+ Добавить урок</button>
           </div>
         `;
         container.appendChild(card);
@@ -856,15 +815,15 @@
     }
 
     function updateHw(key, text) {
-      if (!window.homework[key]) window.homework[key] = { text: '', done: false };
-      window.homework[key].text = text;
+      if (!homework[key]) homework[key] = { text: '', done: false };
+      homework[key].text = text;
       saveData();
       renderHomework();
     }
 
     function toggleDone(key, done) {
-      if (!window.homework[key]) window.homework[key] = { text: '', done: false };
-      window.homework[key].done = done;
+      if (!homework[key]) homework[key] = { text: '', done: false };
+      homework[key].done = done;
       saveData();
       renderHomework();
     }
@@ -891,7 +850,7 @@
     }
 
     function exportData() {
-      const data = { schedule: scheduleTemplate, homework: window.homework };
+      const data = { schedule: scheduleTemplate, homework: homework };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -909,13 +868,13 @@
           const data = JSON.parse(e.target.result);
           if (data.schedule && data.homework) {
             scheduleTemplate = data.schedule;
-            window.homework = data.homework;
+            homework = data.homework;
             saveData();
             renderHomework();
-            alert('Данные успешно импортированы!');
+            alert('Данные импортированы!');
           }
         } catch (err) {
-          alert('Ошибка чтения файла!');
+          alert('Ошибка файла!');
         }
       };
       reader.readAsText(file);
@@ -923,6 +882,24 @@
 
     function escapeHtml(str) {
       return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    // Поддержка жестов свайпа по экрану для переключения недель
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    document.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+      if (touchEndX < touchStartX - 60) changeWeek(1);  // Свайп влево -> следующая неделя
+      if (touchEndX > touchStartX + 60) changeWeek(-1); // Свайп вправо -> предыдущая неделя
     }
 
     renderHomework();
