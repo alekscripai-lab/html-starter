@@ -45,7 +45,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
     }
@@ -57,7 +57,7 @@
     }
 
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 700;
     }
 
@@ -117,6 +117,63 @@
       background: var(--accent);
       border-color: var(--accent);
       color: #fff;
+    }
+
+    /* Виджет урока */
+    .widget-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .widget-title {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .widget-body {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 2px;
+    }
+
+    .widget-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Фильтр */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .filter-btn.active {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--completed);
+      border-color: var(--completed);
     }
 
     .view {
@@ -218,7 +275,7 @@
     .item-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       margin-top: 12px;
     }
 
@@ -268,6 +325,31 @@
       border-color: var(--accent);
     }
 
+    /* Теги быстрых ответов */
+    .quick-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tag-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tag-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
     .checkbox {
       width: 18px;
       height: 18px;
@@ -288,10 +370,6 @@
       align-items: center;
     }
 
-    .schedule-input-group input {
-      font-size: 0.8rem;
-    }
-
     .btn {
       background: var(--accent);
       color: white;
@@ -306,13 +384,23 @@
       background: var(--accent-hover);
     }
 
+    .btn-secondary {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
     .btn-danger {
       background: #ef4444;
       padding: 6px 10px;
     }
 
-    .btn-danger:hover {
-      background: #dc2626;
+    .backup-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
     }
   </style>
 </head>
@@ -335,82 +423,61 @@
     </div>
   </header>
 
-  <!-- Вкладка: Дневник с раскрывающимися днями -->
+  <!-- Виджет уроков -->
+  <div class="widget-card" id="lesson-widget">
+    <div>
+      <div class="widget-title" id="widget-label">Урок</div>
+      <div class="widget-body" id="widget-subject">Загрузка...</div>
+    </div>
+    <div class="widget-meta" id="widget-meta"></div>
+  </div>
+
+  <!-- Панель фильтра -->
+  <div class="filter-bar">
+    <span>Показывать:</span>
+    <button class="filter-btn active" id="filter-all-btn" onclick="setFilter(false)">Все уроки</button>
+    <button class="filter-btn" id="filter-hw-btn" onclick="setFilter(true)">Только с ДЗ</button>
+  </div>
+
   <main id="homework-view" class="view active">
     <div class="days-accordion" id="homework-grid"></div>
   </main>
 
-  <!-- Вкладка: Шаблон расписания -->
   <main id="schedule-view" class="view">
     <div class="days-accordion" id="schedule-grid"></div>
+    <div class="backup-actions">
+      <button class="btn btn-secondary" style="flex:1;" onclick="exportData()">📥 Сохранить бэкап</button>
+      <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('importFile').click()">📤 Загрузить бэкап</button>
+      <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+    </div>
   </main>
 
   <script>
     const WEEKDAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'];
     
-    // Стандартное расписание звонков
     const TIMES = [
-      '08:15 – 09:00',
-      '09:15 – 10:00',
-      '10:15 – 11:00',
-      '11:20 – 12:05',
-      '12:20 – 13:05',
-      '13:15 – 14:00',
-      '14:05 – 14:50'
+      { start: '08:15', end: '09:00', text: '08:15 – 09:00' },
+      { start: '09:15', end: '10:00', text: '09:15 – 10:00' },
+      { start: '10:15', end: '11:00', text: '10:15 – 11:00' },
+      { start: '11:20', end: '12:05', text: '11:20 – 12:05' },
+      { start: '12:20', end: '13:05', text: '12:20 – 13:05' },
+      { start: '13:15', end: '14:00', text: '13:15 – 14:00' },
+      { start: '14:05', end: '14:50', text: '14:05 – 14:50' }
     ];
 
-    // Базовое расписание 11 «А» класса по умолчанию
     const DEFAULT_SCHEDULE = {
-      0: [
-        { name: 'Информатика', room: 'каб. 13' },
-        { name: 'Информатика', room: 'каб. 13' },
-        { name: 'Русский язык', room: 'каб. 27' },
-        { name: 'Русский язык', room: 'каб. 27' },
-        { name: 'Рум / Англ', room: '17 / 19' },
-        { name: 'Англ / Рум', room: '19 / 17' },
-        { name: 'География', room: 'каб. 18' }
-      ],
-      1: [
-        { name: 'Рум / Англ', room: '17 / 19' },
-        { name: 'Англ / Рум', room: '19 / 17' },
-        { name: 'Математика', room: 'каб. 22' },
-        { name: 'Химия', room: 'каб. 24' },
-        { name: 'Русский язык', room: 'каб. 27' },
-        { name: 'История', room: 'каб. 11' },
-        { name: 'История', room: 'каб. 11' }
-      ],
-      2: [
-        { name: 'Разв. личн.', room: 'каб. 26' },
-        { name: 'Математика', room: 'каб. 24' },
-        { name: 'География', room: 'каб. 18' },
-        { name: 'Биология', room: 'каб. 20' },
-        { name: 'Физ. восп.', room: 'с/зал' },
-        { name: 'Физика', room: 'каб. 23' },
-        { name: 'Курс по выбору', room: 'каб. 26' }
-      ],
-      3: [
-        { name: 'Рум / Англ', room: '17 / 19' },
-        { name: 'Рум / Англ', room: '17 / 19' },
-        { name: 'Англ / Рум', room: '19 / 17' },
-        { name: 'Англ / Рум', room: '19 / 17' },
-        { name: 'История', room: 'каб. 11' },
-        { name: 'Математика', room: 'каб. 13' },
-        { name: 'Химия', room: 'каб. 24' }
-      ],
-      4: [
-        { name: 'Гражд. восп.', room: 'каб. 18' },
-        { name: 'Русский язык', room: 'каб. 27' },
-        { name: 'Физ. восп.', room: 'с/зал' },
-        { name: 'Математика', room: 'каб. 18' },
-        { name: 'Физика', room: 'каб. 23' },
-        { name: 'Биология', room: 'каб. 20' }
-      ]
+      0: [{ name: 'Информатика', room: 'каб. 13' }, { name: 'Информатика', room: 'каб. 13' }, { name: 'Русский язык', room: 'каб. 27' }, { name: 'Русский язык', room: 'каб. 27' }, { name: 'Рум / Англ', room: '17 / 19' }, { name: 'Англ / Рум', room: '19 / 17' }, { name: 'География', room: 'каб. 18' }],
+      1: [{ name: 'Рум / Англ', room: '17 / 19' }, { name: 'Англ / Рум', room: '19 / 17' }, { name: 'Математика', room: 'каб. 22' }, { name: 'Химия', room: 'каб. 24' }, { name: 'Русский язык', room: 'каб. 27' }, { name: 'История', room: 'каб. 11' }, { name: 'История', room: 'каб. 11' }],
+      2: [{ name: 'Разв. личн.', room: 'каб. 26' }, { name: 'Математика', room: 'каб. 24' }, { name: 'География', room: 'каб. 18' }, { name: 'Биология', room: 'каб. 20' }, { name: 'Физ. восп.', room: 'с/зал' }, { name: 'Физика', room: 'каб. 23' }, { name: 'Курс по выбору', room: 'каб. 26' }],
+      3: [{ name: 'Рум / Англ', room: '17 / 19' }, { name: 'Рум / Англ', room: '17 / 19' }, { name: 'Англ / Рум', room: '19 / 17' }, { name: 'Англ / Рум', room: '19 / 17' }, { name: 'История', room: 'каб. 11' }, { name: 'Математика', room: 'каб. 13' }, { name: 'Химия', room: 'каб. 24' }],
+      4: [{ name: 'Гражд. восп.', room: 'каб. 18' }, { name: 'Русский язык', room: 'каб. 27' }, { name: 'Физ. восп.', room: 'с/зал' }, { name: 'Математика', room: 'каб. 18' }, { name: 'Физика', room: 'каб. 23' }, { name: 'Биология', room: 'каб. 20' }]
     };
 
     let currentMonday = getMonday(new Date());
     let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_11a')) || DEFAULT_SCHEDULE;
     let homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
-    let openCards = {}; // Хранит состояние открыта/закрыта плашка дня
+    let openCards = {}; 
+    let filterOnlyHw = false;
 
     function saveData() {
       localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
@@ -432,9 +499,28 @@
       return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
     }
 
+    function getTargetAutoOpenDateKey() {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const targetDate = new Date(now);
+
+      if (dayOfWeek >= 1 && dayOfWeek <= 4) targetDate.setDate(now.getDate() + 1);
+      else if (dayOfWeek === 5) targetDate.setDate(now.getDate() + 3);
+      else if (dayOfWeek === 6) targetDate.setDate(now.getDate() + 2);
+      else if (dayOfWeek === 0) targetDate.setDate(now.getDate() + 1);
+      return formatDateKey(targetDate);
+    }
+
+    function setFilter(onlyHw) {
+      filterOnlyHw = onlyHw;
+      document.getElementById('filter-all-btn').classList.toggle('active', !onlyHw);
+      document.getElementById('filter-hw-btn').classList.toggle('active', onlyHw);
+      renderHomework();
+    }
+
     function changeWeek(direction) {
       currentMonday.setDate(currentMonday.getDate() + (direction * 7));
-      openCards = {}; // Сбросить развернутые дни при смене недели
+      openCards = {};
       renderHomework();
     }
 
@@ -471,10 +557,66 @@
       renderHomework();
     }
 
+    function appendTag(hwKey, tag) {
+      if (!homework[hwKey]) homework[hwKey] = { text: '', done: false };
+      const current = homework[hwKey].text;
+      homework[hwKey].text = current ? `${current} ${tag}` : `${tag} `;
+      saveData();
+      renderHomework();
+    }
+
+    function updateWidget() {
+      const now = new Date();
+      const dayIndex = now.getDay() - 1; // 0 = Пн
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const labelEl = document.getElementById('widget-label');
+      const subjectEl = document.getElementById('widget-subject');
+      const metaEl = document.getElementById('widget-meta');
+
+      if (dayIndex < 0 || dayIndex > 4) {
+        labelEl.innerText = 'Завтра';
+        const mondayFirst = scheduleTemplate[0]?.[0];
+        subjectEl.innerText = mondayFirst ? (mondayFirst.name || mondayFirst) : 'Выходной';
+        metaEl.innerText = mondayFirst?.room ? `${mondayFirst.room} • 08:15` : 'Уроков нет';
+        return;
+      }
+
+      const todayLessons = scheduleTemplate[dayIndex] || [];
+      let currentLesson = null;
+      let nextLesson = null;
+
+      for (let i = 0; i < todayLessons.length; i++) {
+        const time = TIMES[i];
+        if (currentTime >= time.start && currentTime <= time.end) {
+          currentLesson = { ...todayLessons[i], time: time.text };
+          break;
+        } else if (currentTime < time.start) {
+          nextLesson = { ...todayLessons[i], time: time.start };
+          break;
+        }
+      }
+
+      if (currentLesson) {
+        labelEl.innerText = 'Сейчас идет урок';
+        subjectEl.innerText = currentLesson.name || currentLesson;
+        metaEl.innerText = `${currentLesson.room || ''} • до ${TIMES[todayLessons.indexOf(currentLesson)]?.end}`;
+      } else if (nextLesson) {
+        labelEl.innerText = 'Следующий урок';
+        subjectEl.innerText = nextLesson.name || nextLesson;
+        metaEl.innerText = `${nextLesson.room || ''} • в ${nextLesson.time}`;
+      } else {
+        labelEl.innerText = 'Уроки завершены';
+        subjectEl.innerText = 'Завтра новые занятия';
+        metaEl.innerText = '';
+      }
+    }
+
     function renderHomework() {
       const container = document.getElementById('homework-grid');
       container.innerHTML = '';
       const todayStr = formatDateKey(new Date());
+      const autoOpenKey = getTargetAutoOpenDateKey();
 
       for (let i = 0; i < 5; i++) {
         const dayDate = new Date(currentMonday);
@@ -483,9 +625,8 @@
         const dateKey = formatDateKey(dayDate);
         const isToday = dateKey === todayStr;
 
-        // По умолчанию раскрыт текущий день
         if (openCards[dateKey] === undefined) {
-          openCards[dateKey] = isToday;
+          openCards[dateKey] = (dateKey === autoOpenKey);
         }
 
         const lessons = scheduleTemplate[i] || [];
@@ -499,9 +640,13 @@
             activeHwCount++;
           }
 
+          if (filterOnlyHw && !hwData.text.trim().length) {
+            return '';
+          }
+
           const lessonName = typeof lesson === 'string' ? lesson : lesson.name;
           const lessonRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
-          const timeText = TIMES[idx] || '';
+          const timeText = TIMES[idx]?.text || '';
 
           return `
             <div class="lesson-item ${hwData.done ? 'done' : ''}">
@@ -515,9 +660,16 @@
                 <input type="text" class="hw-input" placeholder="Задание..." value="${escapeHtml(hwData.text)}"
                   onchange="updateHw('${hwKey}', this.value)">
               </div>
+              <div class="quick-tags">
+                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Стр.')">+ Стр.</button>
+                <button class="tag-btn" onclick="appendTag('${hwKey}', '№')">+ №</button>
+                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Параграф')">+ Параграф</button>
+                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Конспект')">+ Конспект</button>
+                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Прочитать')">+ Прочитать</button>
+              </div>
             </div>
           `;
-        }).join('');
+        }).filter(item => item !== '').join('');
 
         const hasHw = activeHwCount > 0;
         const isOpen = openCards[dateKey];
@@ -537,13 +689,14 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Уроков нет</span>'}</div>
+            <div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Нет заданий</span>'}</div>
           </div>
         `;
         container.appendChild(card);
       }
 
       document.getElementById('datePicker').value = formatDateKey(currentMonday);
+      updateWidget();
     }
 
     function renderSchedule() {
@@ -617,6 +770,37 @@
       scheduleTemplate[dayIndex].splice(lessonIndex, 1);
       saveData();
       renderSchedule();
+    }
+
+    function exportData() {
+      const data = { schedule: scheduleTemplate, homework: homework };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `diary_backup_${formatDateKey(new Date())}.json`;
+      a.click();
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.schedule && data.homework) {
+            scheduleTemplate = data.schedule;
+            homework = data.homework;
+            saveData();
+            renderHomework();
+            alert('Данные успешно импортированы!');
+          }
+        } catch (err) {
+          alert('Ошибка чтения файла!');
+        }
+      };
+      reader.readAsText(file);
     }
 
     function escapeHtml(str) {
