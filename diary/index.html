@@ -476,7 +476,6 @@
   </main>
 
   <script>
-    // Подключение к вашей базе Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA0p2-jpA-E3a4E102m48SPiXsAHrp9LjA",
       authDomain: "school-diary-4bb47.firebaseapp.com",
@@ -528,7 +527,7 @@
 
     document.getElementById('groupSelect').value = userGroup;
 
-    // Синхронизация с облаком в реальном времени
+    // Синхронизация с облаком
     db.ref('homework_v2').on('value', (snapshot) => {
       homework = snapshot.val() || {};
       renderHomework();
@@ -889,7 +888,7 @@
           const data = JSON.parse(e.target.result);
           if (data.homework) {
             db.ref('homework_v2').set(data.homework);
-            alert('Данные успешно загружены в облако!');
+            alert('Данные загружены в облако!');
           }
         } catch (err) {
           alert('Ошибка файла!');
