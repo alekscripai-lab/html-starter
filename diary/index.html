@@ -253,15 +253,6 @@
       font-weight: 600;
     }
 
-    .session-badge {
-      font-size: 0.75rem;
-      background: rgba(139, 92, 246, 0.2);
-      color: #a78bfa;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-weight: 600;
-    }
-
     .hw-badge {
       font-size: 0.75rem;
       background: rgba(16, 185, 129, 0.2);
@@ -489,18 +480,13 @@
       { start: '14:05', end: '14:50', text: '14:05 – 14:50' }
     ];
 
-    // Даты каникул 2026-2027
+    // Каникулы и праздничные выходные дни 2026-2027
     const HOLIDAYS = [
+      { name: 'День города Кишинёва 🏙️', start: '2026-10-14', end: '2026-10-14' },
       { name: 'Осенние каникулы 🍂', start: '2026-10-24', end: '2026-11-01' },
       { name: 'Зимние каникулы ❄️', start: '2026-12-25', end: '2027-01-10' },
       { name: 'Весенние каникулы 🌸', start: '2027-03-01', end: '2027-03-08' },
       { name: 'Пасхальные каникулы 🐣', start: '2027-05-01', end: '2027-05-10' }
-    ];
-
-    // Сессии
-    const SESSIONS = [
-      { name: 'Зимняя сессия 📝', start: '2026-12-01', end: '2026-12-18' },
-      { name: 'Летняя сессия 📝', start: '2027-04-26', end: '2027-05-26' }
     ];
 
     const DEFAULT_SCHEDULE = {
@@ -539,10 +525,6 @@
 
     function checkHoliday(dateStr) {
       return HOLIDAYS.find(h => dateStr >= h.start && dateStr <= h.end);
-    }
-
-    function checkSession(dateStr) {
-      return SESSIONS.find(s => dateStr >= s.start && dateStr <= s.end);
     }
 
     function getTargetAutoOpenDateKey() {
@@ -621,7 +603,7 @@
       const metaEl = document.getElementById('widget-meta');
 
       if (holiday) {
-        labelEl.innerText = 'Отдыхаем!';
+        labelEl.innerText = 'Выходной день!';
         subjectEl.innerText = holiday.name;
         metaEl.innerText = 'Занятий нет';
         return;
@@ -681,7 +663,6 @@
         const dateKey = formatDateKey(dayDate);
         const isToday = dateKey === todayStr;
         const holiday = checkHoliday(dateKey);
-        const session = checkSession(dateKey);
 
         if (openCards[dateKey] === undefined) {
           openCards[dateKey] = (dateKey === autoOpenKey);
@@ -747,8 +728,7 @@
             <div class="card-title-left">
               <span>${WEEKDAYS[i]}, ${formatDateDisplay(dayDate)}</span>
               ${isToday ? '<span class="today-badge">Сегодня</span>' : ''}
-              ${holiday ? `<span class="holiday-badge">Каникулы</span>` : ''}
-              ${session && !holiday ? `<span class="session-badge">Сессия</span>` : ''}
+              ${holiday ? `<span class="holiday-badge">Выходной</span>` : ''}
             </div>
             <div class="card-title-right">
               ${hasHw && !holiday ? `<span class="hw-badge">Задано: ${activeHwCount}</span>` : ''}
