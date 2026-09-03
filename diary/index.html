@@ -86,7 +86,7 @@
       color: var(--accent);
     }
 
-    .date-picker {
+    .date-picker, .group-select {
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text);
@@ -420,6 +420,41 @@
       border-top: 1px solid var(--border);
     }
   </style>
+
+  <!-- Подключение Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0p2-jpA-E3a4E102m48SPiXsAHrp9LjA",
+      authDomain: "school-diary-4bb47.firebaseapp.com",
+      projectId: "school-diary-4bb47",
+      storageBucket: "school-diary-4bb47.firebasestorage.app",
+      messagingSenderId: "534309398456",
+      appId: "1:534309398456:web:b11c781a33ecea211d514d",
+      measurementId: "G-B8L6CMFRZJ",
+      databaseURL: "https://school-diary-4bb47-default-rtdb.europe-west1.firebasedatabase.app"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.db = db;
+    window.dbRef = ref;
+    window.dbSet = set;
+    window.dbOnValue = onValue;
+
+    // Подписка на обновления ДЗ из облака
+    onValue(ref(db, 'homework'), (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        window.homework = data;
+        localStorage.setItem('diary_hw_dates', JSON.stringify(data));
+        if (window.renderHomework) window.renderHomework();
+      }
+    });
+  </script>
 </head>
 <body>
 
@@ -436,6 +471,10 @@
       <button class="nav-btn" onclick="changeWeek(-1)">← Пред.</button>
       <button class="nav-btn" onclick="goToday()">Сегодня</button>
       <button class="nav-btn" onclick="changeWeek(1)">След. →</button>
+      <select id="groupSelect" class="group-select" onchange="changeGroup(this.value)">
+        <option value="1">Группа 1</option>
+        <option value="2">Группа 2</option>
+      </select>
       <input type="date" id="datePicker" class="date-picker" onchange="jumpToDate(this.value)">
     </div>
   </header>
@@ -480,7 +519,6 @@
       { start: '14:05', end: '14:50', text: '14:05 – 14:50' }
     ];
 
-    // Каникулы и праздничные выходные дни 2026-2027
     const HOLIDAYS = [
       { name: 'День города Кишинёва 🏙️', start: '2026-10-14', end: '2026-10-14' },
       { name: 'Осенние каникулы 🍂', start: '2026-10-24', end: '2026-11-01' },
@@ -499,13 +537,40 @@
 
     let currentMonday = getMonday(new Date());
     let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_11a')) || DEFAULT_SCHEDULE;
-    let homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
+    window.homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
+    let userGroup = localStorage.getItem('diary_user_group') || '1';
     let openCards = {}; 
     let filterOnlyHw = false;
 
+    document.getElementById('groupSelect').value = userGroup;
+
     function saveData() {
       localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
-      localStorage.setItem('diary_hw_dates', JSON.stringify(homework));
+      localStorage.setItem('diary_hw_dates', JSON.stringify(window.homework));
+      
+      // Отправка в облако Firebase
+      if (window.db && window.dbSet && window.dbRef) {
+        window.dbSet(window.dbRef(window.db, 'homework'), window.homework);
+      }
+    }
+
+    function changeGroup(val) {
+      userGroup = val;
+      localStorage.setItem('diary_user_group', val);
+      renderHomework();
+    }
+
+    function parseSubjectForGroup(rawName, rawRoom) {
+      if (!rawName.includes('/')) return { name: rawName, room: rawRoom };
+
+      const names = rawName.split('/').map(s => s.trim());
+      const rooms = rawRoom.split('/').map(s => s.trim());
+
+      const isGroup1 = (userGroup === '1');
+      return {
+        name: isGroup1 ? names[0] : (names[1] || names[0]),
+        room: isGroup1 ? rooms[0] : (rooms[1] || rooms[0] || '')
+      };
     }
 
     function getMonday(date) {
@@ -586,9 +651,9 @@
     }
 
     function appendTag(hwKey, tag) {
-      if (!homework[hwKey]) homework[hwKey] = { text: '', done: false };
-      const current = homework[hwKey].text;
-      homework[hwKey].text = current ? `${current} ${tag}` : `${tag} `;
+      if (!window.homework[hwKey]) window.homework[hwKey] = { text: '', done: false };
+      const current = window.homework[hwKey].text;
+      window.homework[hwKey].text = current ? `${current} ${tag}` : `${tag} `;
       saveData();
       renderHomework();
     }
@@ -614,8 +679,9 @@
 
       if (dayIndex < 0 || dayIndex > 4) {
         labelEl.innerText = 'Завтра';
-        const mondayFirst = scheduleTemplate[0]?.[0];
-        subjectEl.innerText = mondayFirst ? (mondayFirst.name || mondayFirst) : 'Выходной';
+        const mondayFirstRaw = scheduleTemplate[0]?.[0];
+        const mondayFirst = mondayFirstRaw ? parseSubjectForGroup(mondayFirstRaw.name || mondayFirstRaw, mondayFirstRaw.room || '') : null;
+        subjectEl.innerText = mondayFirst ? mondayFirst.name : 'Выходной';
         metaEl.innerText = mondayFirst?.room ? `${mondayFirst.room} • 08:15` : 'Уроков нет';
         return;
       }
@@ -626,22 +692,23 @@
 
       for (let i = 0; i < todayLessons.length; i++) {
         const time = TIMES[i];
+        const parsed = parseSubjectForGroup(todayLessons[i].name || todayLessons[i], todayLessons[i].room || '');
         if (currentTime >= time.start && currentTime <= time.end) {
-          currentLesson = { ...todayLessons[i], time: time.text };
+          currentLesson = { ...parsed, time: time.text };
           break;
         } else if (currentTime < time.start) {
-          nextLesson = { ...todayLessons[i], time: time.start };
+          nextLesson = { ...parsed, time: time.start };
           break;
         }
       }
 
       if (currentLesson) {
         labelEl.innerText = 'Сейчас идет урок';
-        subjectEl.innerText = currentLesson.name || currentLesson;
+        subjectEl.innerText = currentLesson.name;
         metaEl.innerText = `${currentLesson.room || ''} • до ${TIMES[todayLessons.indexOf(currentLesson)]?.end}`;
       } else if (nextLesson) {
         labelEl.innerText = 'Следующий урок';
-        subjectEl.innerText = nextLesson.name || nextLesson;
+        subjectEl.innerText = nextLesson.name;
         metaEl.innerText = `${nextLesson.room || ''} • в ${nextLesson.time}`;
       } else {
         labelEl.innerText = 'Уроки завершены';
@@ -650,7 +717,7 @@
       }
     }
 
-    function renderHomework() {
+    window.renderHomework = function() {
       const container = document.getElementById('homework-grid');
       container.innerHTML = '';
       const todayStr = formatDateKey(new Date());
@@ -672,8 +739,14 @@
         let activeHwCount = 0;
 
         let lessonsList = lessons.map((lesson, idx) => {
-          const hwKey = `${dateKey}_${idx}`;
-          const hwData = homework[hwKey] || { text: '', done: false };
+          const rawName = typeof lesson === 'string' ? lesson : lesson.name;
+          const rawRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
+          
+          const parsed = parseSubjectForGroup(rawName, rawRoom);
+          
+          // Привязка ДЗ к предмету
+          const hwKey = `${dateKey}_${parsed.name.replace(/\s+/g, '_')}`;
+          const hwData = window.homework[hwKey] || { text: '', done: false };
 
           if (hwData.text.trim().length > 0 && !hwData.done) {
             activeHwCount++;
@@ -683,15 +756,13 @@
             return '';
           }
 
-          const lessonName = typeof lesson === 'string' ? lesson : lesson.name;
-          const lessonRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
           const timeText = TIMES[idx]?.text || '';
 
           return `
             <div class="lesson-item ${hwData.done ? 'done' : ''}">
               <div class="lesson-header">
-                <span>${idx + 1}. ${escapeHtml(lessonName)}</span>
-                <span class="lesson-meta">${lessonRoom} ${timeText ? '• ' + timeText : ''}</span>
+                <span>${idx + 1}. ${escapeHtml(parsed.name)}</span>
+                <span class="lesson-meta">${parsed.room ? parsed.room + ' • ' : ''}${timeText}</span>
               </div>
               <div class="hw-container">
                 <input type="checkbox" class="checkbox" ${hwData.done ? 'checked' : ''} 
@@ -785,15 +856,15 @@
     }
 
     function updateHw(key, text) {
-      if (!homework[key]) homework[key] = { text: '', done: false };
-      homework[key].text = text;
+      if (!window.homework[key]) window.homework[key] = { text: '', done: false };
+      window.homework[key].text = text;
       saveData();
       renderHomework();
     }
 
     function toggleDone(key, done) {
-      if (!homework[key]) homework[key] = { text: '', done: false };
-      homework[key].done = done;
+      if (!window.homework[key]) window.homework[key] = { text: '', done: false };
+      window.homework[key].done = done;
       saveData();
       renderHomework();
     }
@@ -820,7 +891,7 @@
     }
 
     function exportData() {
-      const data = { schedule: scheduleTemplate, homework: homework };
+      const data = { schedule: scheduleTemplate, homework: window.homework };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -838,7 +909,7 @@
           const data = JSON.parse(e.target.result);
           if (data.schedule && data.homework) {
             scheduleTemplate = data.schedule;
-            homework = data.homework;
+            window.homework = data.homework;
             saveData();
             renderHomework();
             alert('Данные успешно импортированы!');
