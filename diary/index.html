@@ -24,6 +24,8 @@
       --today-border: #f59e0b;
       --active-hw-border: #10b981;
       --active-hw-bg: rgba(16, 185, 129, 0.08);
+      --holiday-bg: rgba(245, 158, 11, 0.1);
+      --holiday-border: #f59e0b;
     }
 
     * {
@@ -119,7 +121,6 @@
       color: #fff;
     }
 
-    /* Виджет урока */
     .widget-card {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       border: 1px solid var(--accent);
@@ -150,7 +151,6 @@
       color: var(--text-muted);
     }
 
-    /* Фильтр */
     .filter-bar {
       display: flex;
       align-items: center;
@@ -207,8 +207,9 @@
       background-color: var(--active-hw-bg);
     }
 
-    .card.is-today.has-hw {
-      border-color: var(--today-border);
+    .card.is-holiday {
+      border: 1px dashed var(--holiday-border);
+      background-color: var(--holiday-bg);
     }
 
     .card-header {
@@ -241,6 +242,24 @@
       padding: 2px 6px;
       border-radius: 8px;
       font-weight: bold;
+    }
+
+    .holiday-badge {
+      font-size: 0.75rem;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--holiday-border);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .session-badge {
+      font-size: 0.75rem;
+      background: rgba(139, 92, 246, 0.2);
+      color: #a78bfa;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
     }
 
     .hw-badge {
@@ -277,6 +296,14 @@
       flex-direction: column;
       gap: 12px;
       margin-top: 12px;
+    }
+
+    .holiday-banner {
+      padding: 20px;
+      text-align: center;
+      color: var(--holiday-border);
+      font-weight: 600;
+      font-size: 1.1rem;
     }
 
     .lesson-item {
@@ -325,7 +352,6 @@
       border-color: var(--accent);
     }
 
-    /* Теги быстрых ответов */
     .quick-tags {
       display: flex;
       gap: 6px;
@@ -423,7 +449,6 @@
     </div>
   </header>
 
-  <!-- Виджет уроков -->
   <div class="widget-card" id="lesson-widget">
     <div>
       <div class="widget-title" id="widget-label">Урок</div>
@@ -432,7 +457,6 @@
     <div class="widget-meta" id="widget-meta"></div>
   </div>
 
-  <!-- Панель фильтра -->
   <div class="filter-bar">
     <span>Показывать:</span>
     <button class="filter-btn active" id="filter-all-btn" onclick="setFilter(false)">Все уроки</button>
@@ -463,6 +487,20 @@
       { start: '12:20', end: '13:05', text: '12:20 – 13:05' },
       { start: '13:15', end: '14:00', text: '13:15 – 14:00' },
       { start: '14:05', end: '14:50', text: '14:05 – 14:50' }
+    ];
+
+    // Даты каникул 2026-2027
+    const HOLIDAYS = [
+      { name: 'Осенние каникулы 🍂', start: '2026-10-24', end: '2026-11-01' },
+      { name: 'Зимние каникулы ❄️', start: '2026-12-25', end: '2027-01-10' },
+      { name: 'Весенние каникулы 🌸', start: '2027-03-01', end: '2027-03-08' },
+      { name: 'Пасхальные каникулы 🐣', start: '2027-05-01', end: '2027-05-10' }
+    ];
+
+    // Сессии
+    const SESSIONS = [
+      { name: 'Зимняя сессия 📝', start: '2026-12-01', end: '2026-12-18' },
+      { name: 'Летняя сессия 📝', start: '2027-04-26', end: '2027-05-26' }
     ];
 
     const DEFAULT_SCHEDULE = {
@@ -497,6 +535,14 @@
 
     function formatDateDisplay(date) {
       return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    }
+
+    function checkHoliday(dateStr) {
+      return HOLIDAYS.find(h => dateStr >= h.start && dateStr <= h.end);
+    }
+
+    function checkSession(dateStr) {
+      return SESSIONS.find(s => dateStr >= s.start && dateStr <= s.end);
     }
 
     function getTargetAutoOpenDateKey() {
@@ -567,12 +613,22 @@
 
     function updateWidget() {
       const now = new Date();
-      const dayIndex = now.getDay() - 1; // 0 = Пн
-      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const dateStr = formatDateKey(now);
+      const holiday = checkHoliday(dateStr);
 
       const labelEl = document.getElementById('widget-label');
       const subjectEl = document.getElementById('widget-subject');
       const metaEl = document.getElementById('widget-meta');
+
+      if (holiday) {
+        labelEl.innerText = 'Отдыхаем!';
+        subjectEl.innerText = holiday.name;
+        metaEl.innerText = 'Занятий нет';
+        return;
+      }
+
+      const dayIndex = now.getDay() - 1;
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
       if (dayIndex < 0 || dayIndex > 4) {
         labelEl.innerText = 'Завтра';
@@ -624,6 +680,8 @@
 
         const dateKey = formatDateKey(dayDate);
         const isToday = dateKey === todayStr;
+        const holiday = checkHoliday(dateKey);
+        const session = checkSession(dateKey);
 
         if (openCards[dateKey] === undefined) {
           openCards[dateKey] = (dateKey === autoOpenKey);
@@ -675,21 +733,30 @@
         const isOpen = openCards[dateKey];
 
         const card = document.createElement('div');
-        card.className = `card ${isToday ? 'is-today' : ''} ${hasHw ? 'has-hw' : ''} ${isOpen ? 'open' : ''}`;
+        card.className = `card ${isToday ? 'is-today' : ''} ${hasHw ? 'has-hw' : ''} ${holiday ? 'is-holiday' : ''} ${isOpen ? 'open' : ''}`;
+
+        let cardContent = '';
+        if (holiday) {
+          cardContent = `<div class="holiday-banner">🎉 ${holiday.name}</div>`;
+        } else {
+          cardContent = `<div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Нет заданий</span>'}</div>`;
+        }
 
         card.innerHTML = `
           <div class="card-header" onclick="toggleCard('${dateKey}')">
             <div class="card-title-left">
               <span>${WEEKDAYS[i]}, ${formatDateDisplay(dayDate)}</span>
               ${isToday ? '<span class="today-badge">Сегодня</span>' : ''}
+              ${holiday ? `<span class="holiday-badge">Каникулы</span>` : ''}
+              ${session && !holiday ? `<span class="session-badge">Сессия</span>` : ''}
             </div>
             <div class="card-title-right">
-              ${hasHw ? `<span class="hw-badge">Задано: ${activeHwCount}</span>` : ''}
+              ${hasHw && !holiday ? `<span class="hw-badge">Задано: ${activeHwCount}</span>` : ''}
               <span class="arrow-icon">▼</span>
             </div>
           </div>
           <div class="card-body">
-            <div class="item-list">${lessonsList || '<span style="color:var(--text-muted)">Нет заданий</span>'}</div>
+            ${cardContent}
           </div>
         `;
         container.appendChild(card);
