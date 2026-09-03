@@ -10,6 +10,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Дневник">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   
   <style>
     :root {
@@ -45,7 +49,6 @@
       user-select: none;
     }
 
-    /* Адаптивная двухэтажная шапка */
     header {
       display: flex;
       flex-direction: column;
@@ -106,7 +109,6 @@
       color: #fff;
     }
 
-    /* Строка навигации по датам */
     .controls {
       display: flex;
       align-items: center;
@@ -139,7 +141,6 @@
       text-align: center;
     }
 
-    /* Виджет и фильтры */
     .widget-card {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       border: 1px solid var(--accent);
@@ -360,7 +361,6 @@
       margin-top: 2px;
       overflow-x: auto;
       padding-bottom: 2px;
-      -webkit-overflow-scrolling: touch;
     }
 
     .tag-btn {
@@ -476,6 +476,21 @@
   </main>
 
   <script>
+    // Подключение к вашей базе Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0p2-jpA-E3a4E102m48SPiXsAHrp9LjA",
+      authDomain: "school-diary-4bb47.firebaseapp.com",
+      databaseURL: "https://school-diary-4bb47-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "school-diary-4bb47",
+      storageBucket: "school-diary-4bb47.firebasestorage.app",
+      messagingSenderId: "534309398456",
+      appId: "1:534309398456:web:b11c781a33ecea211d514d",
+      measurementId: "G-B8L6CMFRZJ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     const WEEKDAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'];
     
     const TIMES = [
@@ -507,21 +522,28 @@
     let currentMonday = getMonday(new Date());
     let userGroup = localStorage.getItem('diary_user_group') || '1';
     let scheduleTemplate = JSON.parse(localStorage.getItem('diary_schedule_11a')) || DEFAULT_SCHEDULE;
-    let homework = JSON.parse(localStorage.getItem('diary_hw_dates')) || {};
+    let homework = {};
     let openCards = {}; 
     let filterOnlyHw = false;
 
     document.getElementById('groupSelect').value = userGroup;
 
-    function saveData() {
-      localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
-      localStorage.setItem('diary_hw_dates', JSON.stringify(homework));
-      localStorage.setItem('diary_user_group', userGroup);
+    // Синхронизация с облаком в реальном времени
+    db.ref('homework_v2').on('value', (snapshot) => {
+      homework = snapshot.val() || {};
+      renderHomework();
+    });
+
+    function getHwStorageKey(rawName, dateKey, idx) {
+      if (rawName.includes('/')) {
+        return `${dateKey}_${idx}_grp${userGroup}`;
+      }
+      return `${dateKey}_${idx}`;
     }
 
     function changeGroup(val) {
       userGroup = val;
-      saveData();
+      localStorage.setItem('diary_user_group', userGroup);
       renderHomework();
     }
 
@@ -614,12 +636,24 @@
       renderHomework();
     }
 
+    function updateHwInDb(hwKey, text, done) {
+      db.ref(`homework_v2/${hwKey}`).set({ text, done });
+    }
+
+    function updateHw(hwKey, text) {
+      const currentObj = homework[hwKey] || { done: false };
+      updateHwInDb(hwKey, text, currentObj.done);
+    }
+
+    function toggleDone(hwKey, done) {
+      const currentObj = homework[hwKey] || { text: '' };
+      updateHwInDb(hwKey, currentObj.text, done);
+    }
+
     function appendTag(hwKey, tag) {
-      if (!homework[hwKey]) homework[hwKey] = { text: '', done: false };
-      const current = homework[hwKey].text;
-      homework[hwKey].text = current ? `${current} ${tag}` : `${tag} `;
-      saveData();
-      renderHomework();
+      const currentObj = homework[hwKey] || { text: '', done: false };
+      const newText = currentObj.text ? `${currentObj.text} ${tag}` : `${tag} `;
+      updateHwInDb(hwKey, newText, currentObj.done);
     }
 
     function updateWidget() {
@@ -704,7 +738,10 @@
         let activeHwCount = 0;
 
         let lessonsList = lessons.map((lesson, idx) => {
-          const hwKey = `${dateKey}_${idx}`;
+          const rawName = typeof lesson === 'string' ? lesson : lesson.name;
+          const rawRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
+
+          const hwKey = getHwStorageKey(rawName, dateKey, idx);
           const hwData = homework[hwKey] || { text: '', done: false };
 
           if (hwData.text.trim().length > 0 && !hwData.done) {
@@ -715,8 +752,6 @@
             return '';
           }
 
-          const rawName = typeof lesson === 'string' ? lesson : lesson.name;
-          const rawRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
           const parsed = parseSubjectForGroup(rawName, rawRoom);
           const timeText = TIMES[idx]?.text || '';
 
@@ -814,38 +849,24 @@
       });
     }
 
-    function updateHw(key, text) {
-      if (!homework[key]) homework[key] = { text: '', done: false };
-      homework[key].text = text;
-      saveData();
-      renderHomework();
-    }
-
-    function toggleDone(key, done) {
-      if (!homework[key]) homework[key] = { text: '', done: false };
-      homework[key].done = done;
-      saveData();
-      renderHomework();
-    }
-
     function updateSubjectTemplate(dayIndex, lessonIndex, field, value) {
       if (typeof scheduleTemplate[dayIndex][lessonIndex] === 'string') {
         scheduleTemplate[dayIndex][lessonIndex] = { name: scheduleTemplate[dayIndex][lessonIndex], room: '' };
       }
       scheduleTemplate[dayIndex][lessonIndex][field] = value;
-      saveData();
+      localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
     }
 
     function addSubjectTemplate(dayIndex) {
       if (!scheduleTemplate[dayIndex]) scheduleTemplate[dayIndex] = [];
       scheduleTemplate[dayIndex].push({ name: 'Новый предмет', room: '' });
-      saveData();
+      localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
       renderSchedule();
     }
 
     function removeSubjectTemplate(dayIndex, lessonIndex) {
       scheduleTemplate[dayIndex].splice(lessonIndex, 1);
-      saveData();
+      localStorage.setItem('diary_schedule_11a', JSON.stringify(scheduleTemplate));
       renderSchedule();
     }
 
@@ -866,12 +887,9 @@
       reader.onload = (e) => {
         try {
           const data = JSON.parse(e.target.result);
-          if (data.schedule && data.homework) {
-            scheduleTemplate = data.schedule;
-            homework = data.homework;
-            saveData();
-            renderHomework();
-            alert('Данные импортированы!');
+          if (data.homework) {
+            db.ref('homework_v2').set(data.homework);
+            alert('Данные успешно загружены в облако!');
           }
         } catch (err) {
           alert('Ошибка файла!');
@@ -884,7 +902,6 @@
       return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
-    // Поддержка жестов свайпа по экрану для переключения недель
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -898,8 +915,8 @@
     }, false);
 
     function handleSwipe() {
-      if (touchEndX < touchStartX - 60) changeWeek(1);  // Свайп влево -> следующая неделя
-      if (touchEndX > touchStartX + 60) changeWeek(-1); // Свайп вправо -> предыдущая неделя
+      if (touchEndX < touchStartX - 60) changeWeek(1);
+      if (touchEndX > touchStartX + 60) changeWeek(-1);
     }
 
     renderHomework();
