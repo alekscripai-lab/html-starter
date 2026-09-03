@@ -1,5 +1,5 @@
 {
-  "name": "Школьный Дневник",
+  "name": "11 «А» Дневник",
   "short_name": "Дневник",
   "start_url": "./index.html",
   "display": "standalone",
@@ -7,10 +7,10 @@
   "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "./icon.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
