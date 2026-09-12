@@ -6,7 +6,7 @@
   <title>Школьный Календарь-Дневник</title>
   
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#0b0f19">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Дневник">
@@ -17,18 +17,19 @@
   
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
+      --bg-gradient: radial-gradient(circle at 15% 15%, #311b92 0%, #0f172a 45%, #020617 100%);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --accent: #60a5fa;
+      --accent-glow: rgba(96, 165, 250, 0.35);
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --border: #334155;
-      --completed: #10b981;
-      --today-border: #f59e0b;
-      --active-hw-border: #10b981;
-      --active-hw-bg: rgba(16, 185, 129, 0.08);
-      --holiday-bg: rgba(245, 158, 11, 0.1);
+      --completed: #34d399;
+      --today-border: #fbbf24;
+      --today-glow: rgba(251, 191, 36, 0.3);
+      --active-hw-border: #34d399;
+      --active-hw-bg: rgba(52, 211, 153, 0.08);
+      --holiday-bg: rgba(245, 158, 11, 0.08);
       --holiday-border: #f59e0b;
     }
 
@@ -41,21 +42,36 @@
     }
 
     body {
-      background-color: var(--bg);
+      background: var(--bg-gradient);
+      background-attachment: fixed;
       color: var(--text);
       padding: 12px;
       max-width: 600px;
       margin: 0 auto;
+      min-height: 100vh;
       user-select: none;
     }
 
+    /* Liquid Glass Шапка */
     header {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    @supports not (hanging-punctuation:first) {
+      header {
+        backdrop-filter: url(#displacementFilter) blur(4px);
+        -webkit-backdrop-filter: url(#displacementFilter) blur(4px);
+      }
     }
 
     .header-top {
@@ -69,14 +85,17 @@
       font-size: 1.1rem;
       font-weight: 700;
       white-space: nowrap;
+      background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .group-select {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--glass-border);
       color: var(--accent);
-      padding: 5px 8px;
-      border-radius: 8px;
+      padding: 6px 10px;
+      border-radius: 10px;
       font-size: 0.8rem;
       font-weight: 600;
       outline: none;
@@ -84,11 +103,11 @@
 
     .tabs {
       display: flex;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.03);
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.25);
       padding: 3px;
       border-radius: 10px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .tab-btn {
@@ -102,11 +121,14 @@
       font-weight: 600;
       font-size: 0.82rem;
       text-align: center;
+      transition: all 0.2s ease;
     }
 
     .tab-btn.active {
-      background: var(--accent);
+      background: rgba(96, 165, 250, 0.2);
       color: #fff;
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      box-shadow: 0 0 12px var(--accent-glow);
     }
 
     .controls {
@@ -117,11 +139,11 @@
     }
 
     .nav-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
       color: var(--text);
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
       font-size: 0.8rem;
@@ -129,11 +151,11 @@
     }
 
     .date-picker {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--glass-border);
       color: var(--text);
-      padding: 7px 6px;
-      border-radius: 8px;
+      padding: 7px 8px;
+      border-radius: 10px;
       outline: none;
       color-scheme: dark;
       font-size: 0.8rem;
@@ -141,15 +163,19 @@
       text-align: center;
     }
 
+    /* Стеклянный виджет урока */
     .widget-card {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border: 1px solid var(--accent);
-      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.12) 0%, rgba(30, 27, 75, 0.4) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      border-radius: 14px;
       padding: 10px 14px;
       margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
 
     .widget-title {
@@ -157,6 +183,7 @@
       color: var(--accent);
       font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .widget-body {
@@ -180,19 +207,20 @@
     }
 
     .filter-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
       color: var(--text-muted);
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 14px;
       cursor: pointer;
       font-size: 0.75rem;
     }
 
     .filter-btn.active {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(52, 211, 153, 0.15);
       color: var(--completed);
-      border-color: var(--completed);
+      border-color: rgba(52, 211, 153, 0.4);
     }
 
     .view {
@@ -207,29 +235,40 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      touch-action: pan-y;
     }
 
+    /* Жидкое стекло (Liquid Glass) для карточек */
     .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
       overflow: hidden;
-      transition: border-color 0.2s, background-color 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    @supports not (hanging-punctuation:first) {
+      .card {
+        backdrop-filter: url(#displacementFilter) blur(4px);
+        -webkit-backdrop-filter: url(#displacementFilter) blur(4px);
+      }
     }
 
     .card.is-today {
-      border: 2px solid var(--today-border);
+      border: 1.5px solid var(--today-border);
+      box-shadow: 0 0 16px var(--today-glow);
     }
 
     .card.has-hw {
       border-color: var(--active-hw-border);
-      background-color: var(--active-hw-bg);
+      background: var(--active-hw-bg);
     }
 
     .card.is-holiday {
       border: 1px dashed var(--holiday-border);
-      background-color: var(--holiday-bg);
+      background: var(--holiday-bg);
     }
 
     .card-header {
@@ -256,11 +295,12 @@
 
     .today-badge {
       font-size: 0.65rem;
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(251, 191, 36, 0.2);
       color: var(--today-border);
-      padding: 2px 5px;
+      padding: 2px 6px;
       border-radius: 6px;
       font-weight: bold;
+      border: 1px solid rgba(251, 191, 36, 0.3);
     }
 
     .holiday-badge {
@@ -274,11 +314,12 @@
 
     .hw-badge {
       font-size: 0.7rem;
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(52, 211, 153, 0.2);
       color: var(--completed);
       padding: 2px 6px;
       border-radius: 10px;
       font-weight: 600;
+      border: 1px solid rgba(52, 211, 153, 0.3);
     }
 
     .arrow-icon {
@@ -320,9 +361,9 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      padding: 8px 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 8px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -347,31 +388,19 @@
 
     .hw-input {
       width: 100%;
-      background: #0f172a;
-      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--glass-border);
       color: var(--text);
-      padding: 6px 8px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 8px;
       font-size: 0.82rem;
+      outline: none;
+      transition: border-color 0.2s;
     }
 
-    .quick-tags {
-      display: flex;
-      gap: 4px;
-      margin-top: 2px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-    }
-
-    .tag-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.68rem;
-      cursor: pointer;
-      white-space: nowrap;
+    .hw-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
     }
 
     .checkbox {
@@ -394,24 +423,26 @@
     }
 
     .btn {
-      background: var(--accent);
+      background: rgba(96, 165, 250, 0.2);
+      border: 1px solid rgba(96, 165, 250, 0.4);
       color: white;
-      border: none;
       padding: 8px 12px;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 500;
       font-size: 0.85rem;
     }
 
     .btn-secondary {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
       color: var(--text);
     }
 
     .btn-danger {
-      background: #ef4444;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
       padding: 6px 8px;
     }
 
@@ -420,11 +451,26 @@
       gap: 8px;
       margin-top: 20px;
       padding-top: 14px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--glass-border);
     }
   </style>
 </head>
 <body>
+
+  <!-- Скрытый SVG фильтр преломления Liquid Glass -->
+  <svg style="display: none;">
+    <filter id="displacementFilter">
+      <feImage
+        href="data:image/png;base64,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тур"
+        preserveAspectRatio="none"/>
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="turbulence"
+        scale="600"
+        xChannelSelector="R"
+        yChannelSelector="G"/>
+    </filter>
+  </svg>
 
   <header>
     <div class="header-top">
@@ -527,7 +573,6 @@
 
     document.getElementById('groupSelect').value = userGroup;
 
-    // Подписка на изменение базы данных
     db.ref('homework_v2').on('value', (snapshot) => {
       homework = snapshot.val() || {};
       renderHomework();
@@ -649,12 +694,6 @@
       updateHwInDb(hwKey, currentObj.text, done);
     }
 
-    function appendTag(hwKey, tag) {
-      const currentObj = homework[hwKey] || { text: '', done: false };
-      const newText = currentObj.text ? `${currentObj.text} ${tag}` : `${tag} `;
-      updateHwInDb(hwKey, newText, currentObj.done);
-    }
-
     function updateWidget() {
       const now = new Date();
       const dateStr = formatDateKey(now);
@@ -765,13 +804,6 @@
                   onchange="toggleDone('${hwKey}', this.checked)">
                 <input type="text" class="hw-input" placeholder="Задание..." value="${escapeHtml(hwData.text)}"
                   onchange="updateHw('${hwKey}', this.value)">
-              </div>
-              <div class="quick-tags">
-                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Стр.')">+ Стр.</button>
-                <button class="tag-btn" onclick="appendTag('${hwKey}', '№')">+ №</button>
-                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Параграф')">+ Параграф</button>
-                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Конспект')">+ Конспект</button>
-                <button class="tag-btn" onclick="appendTag('${hwKey}', 'Прочитать')">+ Прочитать</button>
               </div>
             </div>
           `;
@@ -901,26 +933,8 @@
       return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    document.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, false);
-
-    document.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    }, false);
-
-    function handleSwipe() {
-      if (touchEndX < touchStartX - 60) changeWeek(1);
-      if (touchEndX > touchStartX + 60) changeWeek(-1);
-    }
-
     renderHomework();
 
-    // Автоматическое обновление Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
