@@ -17,16 +17,16 @@
   
   <style>
     :root {
-      --bg-gradient: radial-gradient(circle at 15% 15%, #311b92 0%, #0f172a 45%, #020617 100%);
+      --bg-gradient: radial-gradient(circle at 10% 20%, #311b92 0%, #0f172a 50%, #020617 100%);
       --glass-bg: rgba(255, 255, 255, 0.05);
       --glass-border: rgba(255, 255, 255, 0.12);
       --accent: #60a5fa;
-      --accent-glow: rgba(96, 165, 250, 0.35);
+      --accent-glow: rgba(96, 165, 250, 0.3);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --completed: #34d399;
       --today-border: #fbbf24;
-      --today-glow: rgba(251, 191, 36, 0.3);
+      --today-glow: rgba(251, 191, 36, 0.25);
       --active-hw-border: #34d399;
       --active-hw-bg: rgba(52, 211, 153, 0.08);
       --holiday-bg: rgba(245, 158, 11, 0.08);
@@ -41,18 +41,29 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
     body {
       background: var(--bg-gradient);
       background-attachment: fixed;
       color: var(--text);
-      padding: 12px;
-      max-width: 600px;
+      padding: 10px;
+      max-width: 100%;
       margin: 0 auto;
       min-height: 100vh;
       user-select: none;
     }
 
-    /* Liquid Glass Шапка */
+    .app-container {
+      max-width: 650px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Шапка Liquid Glass */
     header {
       display: flex;
       flex-direction: column;
@@ -65,13 +76,7 @@
       border: 1px solid var(--glass-border);
       border-radius: 16px;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-
-    @supports not (hanging-punctuation:first) {
-      header {
-        backdrop-filter: url(#displacementFilter) blur(4px);
-        -webkit-backdrop-filter: url(#displacementFilter) blur(4px);
-      }
+      width: 100%;
     }
 
     .header-top {
@@ -79,6 +84,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     h1 {
@@ -91,23 +97,26 @@
     }
 
     .group-select {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--glass-border);
       color: var(--accent);
-      padding: 6px 10px;
+      padding: 6px 8px;
       border-radius: 10px;
       font-size: 0.8rem;
       font-weight: 600;
       outline: none;
+      backdrop-filter: blur(8px);
+      max-width: 100%;
     }
 
     .tabs {
       display: flex;
       gap: 4px;
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.2);
       padding: 3px;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.05);
+      flex-shrink: 0;
     }
 
     .tab-btn {
@@ -122,6 +131,7 @@
       font-size: 0.82rem;
       text-align: center;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .tab-btn.active {
@@ -134,24 +144,34 @@
     .controls {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 6px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn-group {
+      display: flex;
+      gap: 6px;
+      flex: 1;
+      min-width: 160px;
     }
 
     .nav-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--glass-border);
       color: var(--text);
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
       font-size: 0.8rem;
-      flex-shrink: 0;
+      backdrop-filter: blur(8px);
+      text-align: center;
+      flex: 1;
     }
 
     .date-picker {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--glass-border);
       color: var(--text);
       padding: 7px 8px;
@@ -159,11 +179,12 @@
       outline: none;
       color-scheme: dark;
       font-size: 0.8rem;
-      width: 100%;
+      flex: 1;
+      min-width: 130px;
       text-align: center;
     }
 
-    /* Стеклянный виджет урока */
+    /* Виджет */
     .widget-card {
       background: linear-gradient(135deg, rgba(96, 165, 250, 0.12) 0%, rgba(30, 27, 75, 0.4) 100%);
       backdrop-filter: blur(16px);
@@ -175,7 +196,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     .widget-title {
@@ -211,7 +232,7 @@
       backdrop-filter: blur(8px);
       border: 1px solid var(--glass-border);
       color: var(--text-muted);
-      padding: 4px 12px;
+      padding: 5px 12px;
       border-radius: 14px;
       cursor: pointer;
       font-size: 0.75rem;
@@ -237,16 +258,17 @@
       gap: 10px;
     }
 
-    /* Жидкое стекло (Liquid Glass) для карточек */
+    /* Карточки с эффектом Liquid Glass */
     .card {
       background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
+      border-radius: 16px;
       overflow: hidden;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      width: 100%;
     }
 
     @supports not (hanging-punctuation:first) {
@@ -284,7 +306,7 @@
       align-items: center;
       gap: 6px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
 
     .card-title-right {
@@ -334,7 +356,7 @@
 
     .card-body {
       display: none;
-      padding: 0 12px 12px 12px;
+      padding: 0 10px 12px 10px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -345,7 +367,7 @@
     .item-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       margin-top: 10px;
     }
 
@@ -361,10 +383,11 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.2);
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.05);
+      width: 100%;
     }
 
     .lesson-header {
@@ -372,30 +395,41 @@
       justify-content: space-between;
       align-items: center;
       font-weight: 600;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
+      gap: 4px;
     }
 
     .lesson-meta {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
+      white-space: nowrap;
     }
 
     .hw-container {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 8px;
+      width: 100%;
     }
 
+    /* Поле ввода ДЗ на основе textarea с авто-растяжением по высоте */
     .hw-input {
       width: 100%;
-      background: rgba(15, 23, 42, 0.75);
+      min-width: 0;
+      flex: 1;
+      background: rgba(15, 23, 42, 0.7);
       border: 1px solid var(--glass-border);
       color: var(--text);
-      padding: 6px 10px;
+      padding: 6px 8px;
       border-radius: 8px;
       font-size: 0.82rem;
       outline: none;
       transition: border-color 0.2s;
+      resize: none;
+      overflow: hidden;
+      min-height: 32px;
+      line-height: 1.35;
+      box-sizing: border-border;
     }
 
     .hw-input:focus {
@@ -406,6 +440,8 @@
     .checkbox {
       width: 18px;
       height: 18px;
+      margin-top: 7px;
+      flex-shrink: 0;
       accent-color: var(--completed);
     }
 
@@ -420,6 +456,7 @@
       gap: 6px;
       margin-bottom: 6px;
       align-items: center;
+      width: 100%;
     }
 
     .btn {
@@ -431,6 +468,7 @@
       cursor: pointer;
       font-weight: 500;
       font-size: 0.85rem;
+      backdrop-filter: blur(8px);
     }
 
     .btn-secondary {
@@ -444,6 +482,7 @@
       border: 1px solid rgba(239, 68, 68, 0.4);
       color: #fca5a5;
       padding: 6px 8px;
+      flex-shrink: 0;
     }
 
     .backup-actions {
@@ -452,6 +491,44 @@
       margin-top: 20px;
       padding-top: 14px;
       border-top: 1px solid var(--glass-border);
+    }
+
+    /* Адаптивность для ПК и Планшетов */
+    @media (min-width: 768px) {
+      body {
+        padding: 20px;
+      }
+
+      .app-container {
+        max-width: 900px;
+      }
+
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+      }
+
+      .header-top {
+        gap: 16px;
+      }
+
+      .controls {
+        width: auto;
+        flex-wrap: nowrap;
+      }
+
+      .days-accordion {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        align-items: start;
+      }
+
+      .card {
+        margin-bottom: 0;
+      }
     }
   </style>
 </head>
@@ -472,54 +549,58 @@
     </filter>
   </svg>
 
-  <header>
-    <div class="header-top">
-      <h1>📅 11 «А»</h1>
-      
-      <select class="group-select" id="groupSelect" onchange="changeGroup(this.value)">
-        <option value="1">Группа 1 (Рум/Англ)</option>
-        <option value="2">Группа 2 (Англ/Рум)</option>
-      </select>
+  <div class="app-container">
+    <header>
+      <div class="header-top">
+        <h1>📅 11 «А»</h1>
+        
+        <select class="group-select" id="groupSelect" onchange="changeGroup(this.value)">
+          <option value="1">Группа 1 (Рум/Англ)</option>
+          <option value="2">Группа 2 (Англ/Рум)</option>
+        </select>
 
-      <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('homework')">Дневник</button>
-        <button class="tab-btn" onclick="switchTab('schedule')">Сетка</button>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('homework')">Дневник</button>
+          <button class="tab-btn" onclick="switchTab('schedule')">Сетка</button>
+        </div>
       </div>
+
+      <div class="controls">
+        <div class="nav-btn-group">
+          <button class="nav-btn" onclick="changeWeek(-1)">←</button>
+          <button class="nav-btn" onclick="goToday()">Сегодня</button>
+          <button class="nav-btn" onclick="changeWeek(1)">→</button>
+        </div>
+        <input type="date" id="datePicker" class="date-picker" onchange="jumpToDate(this.value)">
+      </div>
+    </header>
+
+    <div class="widget-card" id="lesson-widget">
+      <div>
+        <div class="widget-title" id="widget-label">Урок</div>
+        <div class="widget-body" id="widget-subject">Загрузка...</div>
+      </div>
+      <div class="widget-meta" id="widget-meta"></div>
     </div>
 
-    <div class="controls">
-      <button class="nav-btn" onclick="changeWeek(-1)">←</button>
-      <button class="nav-btn" onclick="goToday()">Сегодня</button>
-      <button class="nav-btn" onclick="changeWeek(1)">→</button>
-      <input type="date" id="datePicker" class="date-picker" onchange="jumpToDate(this.value)">
+    <div class="filter-bar">
+      <button class="filter-btn active" id="filter-all-btn" onclick="setFilter(false)">Все предметы</button>
+      <button class="filter-btn" id="filter-hw-btn" onclick="setFilter(true)">Только с ДЗ</button>
     </div>
-  </header>
 
-  <div class="widget-card" id="lesson-widget">
-    <div>
-      <div class="widget-title" id="widget-label">Урок</div>
-      <div class="widget-body" id="widget-subject">Загрузка...</div>
-    </div>
-    <div class="widget-meta" id="widget-meta"></div>
+    <main id="homework-view" class="view active">
+      <div class="days-accordion" id="homework-grid"></div>
+    </main>
+
+    <main id="schedule-view" class="view">
+      <div class="days-accordion" id="schedule-grid"></div>
+      <div class="backup-actions">
+        <button class="btn btn-secondary" style="flex:1;" onclick="exportData()">📥 Сохранить</button>
+        <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('importFile').click()">📤 Загрузить</button>
+        <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+      </div>
+    </main>
   </div>
-
-  <div class="filter-bar">
-    <button class="filter-btn active" id="filter-all-btn" onclick="setFilter(false)">Все предметы</button>
-    <button class="filter-btn" id="filter-hw-btn" onclick="setFilter(true)">Только с ДЗ</button>
-  </div>
-
-  <main id="homework-view" class="view active">
-    <div class="days-accordion" id="homework-grid"></div>
-  </main>
-
-  <main id="schedule-view" class="view">
-    <div class="days-accordion" id="schedule-grid"></div>
-    <div class="backup-actions">
-      <button class="btn btn-secondary" style="flex:1;" onclick="exportData()">📥 Сохранить</button>
-      <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('importFile').click()">📤 Загрузить</button>
-      <input type="file" id="importFile" style="display:none" onchange="importData(event)">
-    </div>
-  </main>
 
   <script>
     const firebaseConfig = {
@@ -694,6 +775,12 @@
       updateHwInDb(hwKey, currentObj.text, done);
     }
 
+    // Авто-расширение textarea по высоте
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = (el.scrollHeight) + 'px';
+    }
+
     function updateWidget() {
       const now = new Date();
       const dateStr = formatDateKey(now);
@@ -802,8 +889,9 @@
               <div class="hw-container">
                 <input type="checkbox" class="checkbox" ${hwData.done ? 'checked' : ''} 
                   onchange="toggleDone('${hwKey}', this.checked)">
-                <input type="text" class="hw-input" placeholder="Задание..." value="${escapeHtml(hwData.text)}"
-                  onchange="updateHw('${hwKey}', this.value)">
+                <textarea class="hw-input" placeholder="Задание..." rows="1"
+                  oninput="autoResize(this)"
+                  onchange="updateHw('${hwKey}', this.value)">${escapeHtml(hwData.text)}</textarea>
               </div>
             </div>
           `;
@@ -839,6 +927,12 @@
       }
 
       document.getElementById('datePicker').value = formatDateKey(currentMonday);
+      
+      // Авто-растяжение всех textarea после отрисовки
+      setTimeout(() => {
+        document.querySelectorAll('textarea.hw-input').forEach(el => autoResize(el));
+      }, 0);
+
       updateWidget();
     }
 
@@ -860,7 +954,7 @@
               <span style="font-size:0.75rem; color:var(--text-muted); width:16px;">${idx + 1}.</span>
               <input type="text" class="hw-input" placeholder="Предмет" value="${escapeHtml(name)}" 
                 onchange="updateSubjectTemplate(${dayIndex}, ${idx}, 'name', this.value)">
-              <input type="text" class="hw-input" style="width:80px;" placeholder="Кабинет" value="${escapeHtml(room)}" 
+              <input type="text" class="hw-input" style="width:70px; flex:none;" placeholder="Каб." value="${escapeHtml(room)}" 
                 onchange="updateSubjectTemplate(${dayIndex}, ${idx}, 'room', this.value)">
               <button class="btn btn-danger" onclick="removeSubjectTemplate(${dayIndex}, ${idx})">✕</button>
             </div>
