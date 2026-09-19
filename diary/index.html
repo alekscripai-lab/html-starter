@@ -97,8 +97,8 @@
     }
 
     .group-select {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--glass-border);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--accent);
       color: var(--accent);
       padding: 6px 8px;
       border-radius: 10px;
@@ -412,7 +412,6 @@
       width: 100%;
     }
 
-    /* Поле ввода ДЗ на основе textarea с авто-растяжением по высоте */
     .hw-input {
       width: 100%;
       min-width: 0;
@@ -429,7 +428,7 @@
       overflow: hidden;
       min-height: 32px;
       line-height: 1.35;
-      box-sizing: border-border;
+      box-sizing: border-box;
     }
 
     .hw-input:focus {
@@ -654,16 +653,19 @@
 
     document.getElementById('groupSelect').value = userGroup;
 
+    // СЛУШАТЕЛЬ FIREBASE: перерисовываем только если пользователь НЕ вводит текст прямо сейчас
     db.ref('homework_v2').on('value', (snapshot) => {
       homework = snapshot.val() || {};
-      renderHomework();
+      const activeEl = document.activeElement;
+      if (!activeEl || (activeEl.tagName !== 'TEXTAREA' && activeEl.tagName !== 'INPUT')) {
+        renderHomework();
+      }
     });
 
-    function getHwStorageKey(rawName, dateKey, idx) {
-      if (rawName.includes('/')) {
-        return `${dateKey}_${idx}_grp${userGroup}`;
-      }
-      return `${dateKey}_${idx}`;
+    // Ключ ДЗ привязан к названию предмета
+    function getHwStorageKey(parsedSubjectName, dateKey) {
+      const cleanName = (parsedSubjectName || '').replace(/[^a-zA-Zа-яА-Я0-9]/g, '_').toLowerCase();
+      return `${dateKey}_${cleanName}`;
     }
 
     function changeGroup(val) {
@@ -692,14 +694,20 @@
     }
 
     function parseSubjectForGroup(nameStr, roomStr) {
-      if (!nameStr.includes('/')) return { name: nameStr, room: roomStr };
+      if (!nameStr || !nameStr.includes('/')) return { name: nameStr, room: roomStr };
       const partsName = nameStr.split('/').map(s => s.trim());
-      const partsRoom = roomStr.split('/').map(s => s.trim());
+      const partsRoom = roomStr ? roomStr.split('/').map(s => s.trim()) : [];
 
       if (userGroup === '1') {
-        return { name: partsName[0] || nameStr, room: partsRoom[0] ? `каб. ${partsRoom[0]}` : roomStr };
+        return { 
+          name: partsName[0] || nameStr, 
+          room: partsRoom[0] ? (partsRoom[0].includes('каб') ? partsRoom[0] : `каб. ${partsRoom[0]}`) : roomStr 
+        };
       } else {
-        return { name: partsName[1] || nameStr, room: partsRoom[1] ? `каб. ${partsRoom[1]}` : roomStr };
+        return { 
+          name: partsName[1] || nameStr, 
+          room: partsRoom[1] ? (partsRoom[1].includes('каб') ? partsRoom[1] : `каб. ${partsRoom[1]}`) : roomStr 
+        };
       }
     }
 
@@ -761,21 +769,27 @@
       renderHomework();
     }
 
-    function updateHwInDb(hwKey, text, done) {
-      db.ref(`homework_v2/${hwKey}`).set({ text, done });
-    }
-
-    function updateHw(hwKey, text) {
+    // ИСПРАВЛЕННОЕ СОХРАНЕНИЕ: без полной перерисовывающей функции renderHomework()
+    function updateHw(hwKey, text, textareaEl) {
+      if (textareaEl) autoResize(textareaEl);
+      
       const currentObj = homework[hwKey] || { done: false };
-      updateHwInDb(hwKey, text, currentObj.done);
+      
+      // Обновляем в оперативной памяти
+      homework[hwKey] = { text: text, done: currentObj.done };
+      
+      // Отправляем в Firebase
+      db.ref(`homework_v2/${hwKey}`).set({ text: text, done: currentObj.done });
     }
 
     function toggleDone(hwKey, done) {
       const currentObj = homework[hwKey] || { text: '' };
-      updateHwInDb(hwKey, currentObj.text, done);
+      homework[hwKey] = { text: currentObj.text, done: done };
+      
+      db.ref(`homework_v2/${hwKey}`).set({ text: currentObj.text, done: done });
+      renderHomework();
     }
 
-    // Авто-расширение textarea по высоте
     function autoResize(el) {
       el.style.height = 'auto';
       el.style.height = (el.scrollHeight) + 'px';
@@ -866,7 +880,8 @@
           const rawName = typeof lesson === 'string' ? lesson : lesson.name;
           const rawRoom = typeof lesson === 'object' && lesson.room ? lesson.room : '';
 
-          const hwKey = getHwStorageKey(rawName, dateKey, idx);
+          const parsed = parseSubjectForGroup(rawName, rawRoom);
+          const hwKey = getHwStorageKey(parsed.name, dateKey);
           const hwData = homework[hwKey] || { text: '', done: false };
 
           if (hwData.text.trim().length > 0 && !hwData.done) {
@@ -877,7 +892,6 @@
             return '';
           }
 
-          const parsed = parseSubjectForGroup(rawName, rawRoom);
           const timeText = TIMES[idx]?.text || '';
 
           return `
@@ -890,8 +904,8 @@
                 <input type="checkbox" class="checkbox" ${hwData.done ? 'checked' : ''} 
                   onchange="toggleDone('${hwKey}', this.checked)">
                 <textarea class="hw-input" placeholder="Задание..." rows="1"
-                  oninput="autoResize(this)"
-                  onchange="updateHw('${hwKey}', this.value)">${escapeHtml(hwData.text)}</textarea>
+                  oninput="updateHw('${hwKey}', this.value, this)"
+                  onchange="updateHw('${hwKey}', this.value, this)">${escapeHtml(hwData.text)}</textarea>
               </div>
             </div>
           `;
@@ -928,7 +942,6 @@
 
       document.getElementById('datePicker').value = formatDateKey(currentMonday);
       
-      // Авто-растяжение всех textarea после отрисовки
       setTimeout(() => {
         document.querySelectorAll('textarea.hw-input').forEach(el => autoResize(el));
       }, 0);
